@@ -4,4 +4,4 @@ qemu-user-static binfmt-support
 
 vmdb2 command example:
 
-sudo vmdb2 board.yaml --output board.img --verbose --rootfs-tarball release_architecture_rootfs.tgz
+sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
