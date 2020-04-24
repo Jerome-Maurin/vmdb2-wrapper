@@ -1,5 +1,3 @@
-- replace resolv.conf
-- add eth no renaming in boot params
-- add eth0 in network/interfaces
-- clear root password s/*//g
-- hostname based on board
+- Work on gen_board_yaml.sh
+- Check Makefile syntax
+- Update skel files with latest additions in other yamls
