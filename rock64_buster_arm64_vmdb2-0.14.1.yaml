@@ -1,0 +1,96 @@
+# Use like this : sudo vmdb2 rock64_buster_arm64_vmdb2-0.14.1.yaml --output rock64_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
+steps:
+  - mkimg: "{{ output }}"
+    size: 2G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 0%
+    end: 100%
+    tag: root
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
+
+  - mount: root
+
+  - unpack-rootfs: root
+
+  - qemu-debootstrap: buster
+    mirror: http://ftp.de.debian.org/debian
+    target: root
+    arch: arm64
+    components:
+    - main
+    - contrib
+    - non-free
+    unless: rootfs_unpacked
+
+  - fstab: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - linux-image-arm64
+    tag: root
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - flash-kernel
+    tag: root
+    unless: rootfs_unpacked
+
+  - cache-rootfs: root
+    unless: rootfs_unpacked
+
+  - create-file: /etc/hostname
+    contents: |+
+      Rock64
+
+  - create-file: /etc/flash-kernel/machine
+    contents: |+
+      Pine64 Rock64
+
+  - chroot: root
+    shell: |
+      sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g" /etc/default/flash-kernel
+      flash-kernel
+      rm /etc/flash-kernel/machine
+
+      sed -i "s_root:\*:_root::_g" /etc/shadow
+
+  - chroot: root
+    shell: |
+      wget https://apt.armbian.com/pool/main/l/linux-u-boot-rock64-default/linux-u-boot-rock64_5.98_arm64.deb
+      dpkg -i linux-u-boot-rock64_5.98_arm64.deb
+      rm linux-u-boot-rock64_5.98_arm64.deb
+
+  - root-fs: root
+    shell: |
+      dd if=$ROOT/usr/lib/linux-u-boot-rock64_5.98_arm64/idbloader.bin of={{ output }} seek=64 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-rock64_5.98_arm64/uboot.img of={{ output }} seek=16384 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-rock64_5.98_arm64/trust.bin of={{ output }} seek=24576 conv=fsync,notrunc
+
+  - create-file: /etc/network/interfaces.d/lo
+    contents: |+
+      auto lo
+      iface lo inet loopback
+
+  - create-file: /etc/network/interfaces.d/eth0
+    contents: |+
+      auto eth0
+      iface eth0 inet dhcp
+
+  - create-file: /etc/resolv.conf
+    contents: |
