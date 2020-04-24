@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 cubietruck-plus_buster_vmdb2-0.14.1.yaml --output cubietruck-plus_buster.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
+# Use like this : sudo vmdb2 rock64_bullseye_arm64_vmdb2-0.14.1.yaml --output rock64_bullseye_arm64.img --rootfs-tarball bullseye_arm64_rootfs.tgz --log=stderr
 steps:
   - mkimg: "{{ output }}"
     size: 2G
@@ -21,10 +21,11 @@ steps:
 
   - unpack-rootfs: root
 
-  - qemu-debootstrap: buster
+# We need bullseye because the u-boot-rockchip deb package from buster doesn't support the rock64
+  - qemu-debootstrap: bullseye
     mirror: http://ftp.de.debian.org/debian
     target: root
-    arch: armhf
+    arch: arm64
     components:
     - main
     - contrib
@@ -41,7 +42,7 @@ steps:
 
   - apt: install
     packages:
-      - linux-image-armmp-lpae
+      - linux-image-arm64
     tag: root
     unless: rootfs_unpacked
 
@@ -60,7 +61,7 @@ steps:
 
   - create-file: /etc/flash-kernel/machine
     contents: |+
-      Cubietech Cubietruck Plus
+      Pine64 Rock64
 
   - chroot: root
     shell: |
@@ -72,12 +73,13 @@ steps:
 
   - apt: install
     packages:
-      - u-boot-sunxi
+      - u-boot-rockchip
     tag: root 
 
   - root-fs: root
     shell: |
-      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/Cubietruck_plus/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
+      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/rock64-rk3328/idbloader.img of={{ output }} seek=64
+      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/rock64-rk3328/u-boot.img of={{ output }} seek=16384
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
