@@ -1,6 +1,26 @@
-REQ-0010: add openssh-server, so that when booting, it is possible to connect to target
-REQ-0020: change security policy on /etc/ssh/sshd_config, so that root Linux accoutn can login on the target. 
-  As a result, please launch :
+REQ-0000: In order to use target  without any issue (!), please remove
+root password into  /etc/shadow , so  that it is  possible to login on
+target without password
+
+REQ-0010: Add openssh-server Debian package,  so that when booting, it
+is possible to  connect to target. It  is assumed here that  target is
+connected to one mastered network (!)
+
+  apt install -y openssh-server
 
 
-sed -i -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
+REQ-0020: change security policy on /etc/ssh/sshd_config, so that root
+Linux account can login on the target.  As a result, please launch :
+    
+  sed \
+    -i \
+    -e \
+    's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' \
+    /etc/ssh/sshd_config
+
+REQ-0030:  In order  to use  Ansible  later, please add python  Debian
+package in the original target when creating debootstrap
+
+   apt install -y python
+
+REQ-0040: 
