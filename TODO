@@ -1,2 +1,6 @@
 REQ-0010: add openssh-server, so that when booting, it is possible to connect to target
+REQ-0020: change security policy on /etc/ssh/sshd_config, so that root Linux accoutn can login on the target. 
+  As a result, please launch :
 
+
+sed -i -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
