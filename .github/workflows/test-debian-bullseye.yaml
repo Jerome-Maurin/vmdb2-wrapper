@@ -6,7 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ test-ci ]
+    branches: [ ci-test ]
   pull_request:
     branches: [ master ]
 
