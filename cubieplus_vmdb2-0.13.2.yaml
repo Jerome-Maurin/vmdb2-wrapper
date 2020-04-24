@@ -1,0 +1,63 @@
+steps:
+  - mkimg: "{{ output }}"
+    size: 2G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 0%
+    end: 100%
+    tag: root
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
+
+  - mount: root
+
+  - unpack-rootfs: root
+
+  - qemu-debootstrap: buster
+    mirror: http://ftp.de.debian.org/debian
+    target: root
+    arch: armhf
+    components:
+    - main
+    - contrib
+    - non-free
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      echo "/dev/mmcblk0p1 / ext4 noatime,nodiratime,errors=remount-ro 0 1" > /etc/fstab
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - linux-image-armmp-lpae
+    tag: root
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - flash-kernel
+    tag: root
+    unless: rootfs_unpacked
+
+  - cache-rootfs: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      echo "Cubietech Cubietruck Plus" > /etc/flash-kernel/machine
+      sed -i s_quiet_root=/dev/mmcblk0p1_g /etc/default/flash-kernel
+      flash-kernel
+      rm /etc/flash-kernel/machine
+
+  - apt: install
+    packages:
+      - u-boot-sunxi
+    tag: root 
