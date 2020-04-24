@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 rock64_bullseye_vmdb2-0.14.1.yaml --output rock64.img --rootfs-tarball bullseye_arm64_rootfs.tgz --log=stderr
+# Use like this : sudo vmdb2 rock64_bullseye_vmdb2-0.14.1.yaml --output rock64_bullseye.img --rootfs-tarball bullseye_arm64_rootfs.tgz --log=stderr
 steps:
   - mkimg: "{{ output }}"
     size: 2G
