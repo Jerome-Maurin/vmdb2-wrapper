@@ -23,4 +23,3 @@ package in the original target when creating debootstrap
 
    apt install -y python
 
-REQ-0040: 
