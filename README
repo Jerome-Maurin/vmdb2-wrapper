@@ -1,7 +1,7 @@
-Extra packages needed:
+Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml):
 
 qemu-user-static binfmt-support
 
 vmdb2 command example:
 
-sudo vmdb2 board.yaml --output board.img --verbose --rootfs-tarball buster_armhf_rootfs.tgz
+sudo vmdb2 board.yaml --output board.img --verbose --rootfs-tarball release_architecture_rootfs.tgz
