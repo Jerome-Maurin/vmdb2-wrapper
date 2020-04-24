@@ -70,5 +70,6 @@ steps:
 
   - chroot: root
     shell: |
+      echo -e "auto lo\niface lo inet loopback" > /etc/network/interfaces.d/eth0
       echo -e "auto eth0\niface eth0 inet dhcp" > /etc/network/interfaces.d/eth0
       echo > /etc/resolv.conf
