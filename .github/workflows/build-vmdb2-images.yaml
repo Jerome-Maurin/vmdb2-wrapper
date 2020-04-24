@@ -14,6 +14,8 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    outputs: 
+      key:  
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -35,10 +37,22 @@ jobs:
       run: ls -alrth
 
     - name: Build Cubietruck_plus
-      run: sudo vmdb2 cubietruck-plus_buster_vmdb2-0.14.1.yaml --output cubietruck_plus.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose
+      run: sudo vmdb2 cubietruck-plus_buster_vmdb2-0.14.1.yaml --output cubietruck_plus.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
+    - uses: actions/upload-artifact@v1
+      with:
+        name: cubietruck_plus.img
+        path: cubietruck_plus.img
 
     - name: Build Cubietruck
-      run: sudo vmdb2 cubietruck_buster_vmdb2-0.14.1.yaml --output cubietruck.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose
+      run: sudo vmdb2 cubietruck_buster_vmdb2-0.14.1.yaml --output cubietruck.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
+    - uses: actions/upload-artifact@v1
+      with:
+        name: cubietruck.img
+        path: cubietruck.img
 
     - name: Build Rock64
-      run: sudo vmdb2 rock64_bullseye_vmdb2-0.14.1.yaml --output rock64.img --rootfs-tarball bullseye_arm64_rootfs.tgz --verbose
+      run: sudo vmdb2 rock64_bullseye_vmdb2-0.14.1.yaml --output rock64.img --rootfs-tarball bullseye_arm64_rootfs.tgz --log=stderr
+    - uses: actions/upload-artifact@v1
+      with:
+        name: rock64.img
+        path: rock64.img
