@@ -1,0 +1,2 @@
+REQ-0010: add openssh-server, so that when booting, it is possible to connect to target
+
