@@ -23,3 +23,23 @@ package in the original target when creating debootstrap
 
    apt install -y python
 
+
+REQ-0040: Please create a  command line (or  other mechanism) in order
+to  manage  packages list    when  creating deboostrap.    When  using
+debootstrap, is is  possible to  manage  list of mandatory  package to
+install (option  --include), and AT THE  TIME, manage the list  of non
+whished packages (option --exclude).  Whith this very usefull feature,
+it is then possible for  example to use sysvinit  instead of systemd (
+and of course all dependancies !).  In my user  case, please note that
+following command works on armhf and arm64 platforms.
+
+     /usr/sbin/debootstrap \
+       --verbose \
+       --variant=buildd \
+       --keep-debootstrap-dir \
+       --include=apt-file,bind9-host,bridge-utils,curl,e2fsprogs,file,iputils-ping,isc-dhcp-client,ifupdown,iproute2,lsof,net-tools,openssh-client,openssh-server,openssh-sftp-server,psmisc,python-minimal,python-setuptools,sysvinit-core,sysvinit-utils,vim,vlan \
+       --exclude=systemd,systemd-shim \
+       buster|stretch|bullseye \
+       /tmp/rootfs/  \
+       http://deb.debian.org/debian  \
+
