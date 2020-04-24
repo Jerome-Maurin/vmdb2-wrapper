@@ -79,6 +79,11 @@ steps:
     shell: |
       dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/Cubietruck/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
 
+  - create-file: /etc/network/interfaces.d/lo
+    contents: |+
+      auto lo
+      iface lo inet loopback
+
   - create-file: /etc/network/interfaces.d/eth0
     contents: |+
       auto eth0
