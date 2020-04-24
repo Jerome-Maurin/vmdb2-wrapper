@@ -1,0 +1,44 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ ci-test ]
+#  pull_request:
+#    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Runs a set of commands using the runners shell
+    - name: Install needed packagest
+      run: sudo apt install python3-cliapp cmdtest debootstrap qemu-utils kpartx qemu-user-static binfmt-support
+
+    - name: Install vmdb2
+      run: |
+        wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.14.1-1_all.deb
+        sudo dpkg -i vmdb2_0.14.1-1_all.deb
+        
+    - name: List files
+      run: ls -alrth
+      
+    - name: Build Cubietruck_plus
+      run: sudo vmdb2 cubietruck-plus_buster_vmdb2-0.14.1.yaml --output cubietruck_plus.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose
+      
+    - name: Build Cubietruck
+      run: sudo vmdb2 cubietruck_buster_vmdb2-0.14.1.yaml --output cubietruck.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose
+
+    - name: Build Rock64
+      run: sudo vmdb2 rock64_bullseye_vmdb2-0.14.1.yaml --output rock64.img --rootfs-tarball bullseye_arm64_rootfs.tgz --verbose
