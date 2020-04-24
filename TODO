@@ -51,3 +51,5 @@ following command works on armhf, amd64 and arm64 platforms.
        /tmp/rootfs/  \
        http://deb.debian.org/debian
 
+REQ-0050:  Is is  perhaps  a good idea  to  avoid to use sudo.  Just a
+fakeroot ?
