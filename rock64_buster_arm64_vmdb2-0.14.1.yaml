@@ -70,9 +70,12 @@ steps:
 
       sed -i "s_root:\*:_root::_g" /etc/shadow
 
+  - root-fs: root
+    shell: |
+      curl -o $ROOT/linux-u-boot-rock64_5.98_arm64.deb https://apt.armbian.com/pool/main/l/linux-u-boot-rock64-default/linux-u-boot-rock64_5.98_arm64.deb
+
   - chroot: root
     shell: |
-      wget https://apt.armbian.com/pool/main/l/linux-u-boot-rock64-default/linux-u-boot-rock64_5.98_arm64.deb
       dpkg -i linux-u-boot-rock64_5.98_arm64.deb
       rm linux-u-boot-rock64_5.98_arm64.deb
 
