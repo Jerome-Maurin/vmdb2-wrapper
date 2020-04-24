@@ -1,3 +1,5 @@
+- ext4 without journal !
+
 - Work on gen_board_yaml.sh
 - Check Makefile syntax
 - Update skel files with latest additions in other yamls
