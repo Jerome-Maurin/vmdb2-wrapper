@@ -1,0 +1,2 @@
+input : ${MIRROR} ${RELEASE} ${ARCH} ${BOARD}
+output: __RELEASE__ __MIRROR__ __ARCH__ __KERNEL__ __FULLBOARD__ __UBOOTPKG__ __BOARD__ __UBOOTBIN__ __DDPARAMS__

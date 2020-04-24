@@ -1,0 +1,43 @@
+steps:
+  - mkimg: "{{ output }}"
+    size: 2G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 0%
+    end: 100%
+    tag: root
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
+
+  - mount: root
+
+  - unpack-rootfs: root
+
+  - create-file: /etc/default/flash-kernel
+    contents: |
+      LINUX_KERNEL_CMDLINE="quiet"
+      LINUX_KERNEL_CMDLINE_DEFAULTS="" 
+
+
+  - fstab: root
+
+  - chroot: root
+    shell: |
+      sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
+
+  - chroot: root
+    shell: |
+      sed -i s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1)_g /etc/default/flash-kernel
+
+  - root-fs: root
+    shell: |
+      dd conv=fsync,notrunc if=$ROOT/../../home/local/vmdb2-cubieplus/test.yaml of="{{ output }}" bs=1024 seek=8
+      cat $ROOT/etc/fstab > fst.txt
+      cat $ROOT/etc/default/flash-kernel > fk.txt

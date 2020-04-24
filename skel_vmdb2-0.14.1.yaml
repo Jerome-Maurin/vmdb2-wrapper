@@ -1,0 +1,73 @@
+steps:
+  - mkimg: "{{ output }}"
+    size: 2G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 0%
+    end: 100%
+    tag: root
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
+
+  - mount: root
+
+  - unpack-rootfs: root
+
+  - qemu-debootstrap: __RELEASE__
+    mirror: __MIRROR__
+    target: root
+    arch: __ARCH__
+    components:
+    - main
+    - contrib
+    - non-free
+    unless: rootfs_unpacked
+
+  - fstab: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - __KERNEL__
+    tag: root
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - flash-kernel
+    tag: root
+    unless: rootfs_unpacked
+
+  - cache-rootfs: root
+    unless: rootfs_unpacked
+
+  - create-file: /etc/flash-kernel/machine
+    contents: |
+      __FULLBOARD__
+
+  - chroot: root
+    shell: |
+      sed -i s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1)_g /etc/default/flash-kernel
+      flash-kernel
+      rm /etc/flash-kernel/machine
+
+  - apt: install
+    packages:
+      - __UBOOTPKG__
+    tag: root 
+
+  - root-fs: root
+    shell: |
+      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/__BOARD__/__UBOOTBIN__ of="{{ output }}" __DDPARAMS__
