@@ -1,0 +1,7 @@
+Extra packages needed:
+
+qemu-user-static binfmt-support
+
+vmdb2 command example:
+
+sudo vmdb2 board.yaml --output board.img --verbose --rootfs-tarball buster_armhf_rootfs.tgz
