@@ -1,7 +1,7 @@
 # Use like this : sudo vmdb2 cubietruck_buster_armhf_vmdb2-0.14.1.yaml --output cubietruck_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 steps:
   - mkimg: "{{ output }}"
-    size: 2G
+    size: 3G
 
   - mklabel: msdos
     device: "{{ output }}"

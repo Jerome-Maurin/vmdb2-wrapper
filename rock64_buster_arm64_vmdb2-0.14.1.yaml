@@ -1,7 +1,7 @@
 # Use like this : sudo vmdb2 rock64_buster_arm64_vmdb2-0.14.1.yaml --output rock64_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 steps:
   - mkimg: "{{ output }}"
-    size: 2G
+    size: 3G
 
   - mklabel: msdos
     device: "{{ output }}"

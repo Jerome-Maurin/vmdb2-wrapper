@@ -2,7 +2,7 @@
 # Don't forget to flash the u-boot to the img file afterwards, this is not handled by vmdb2 in the 0.13.2 version (cf 0.14.1 file for hints, use kpartx -asv cubietruck-plus_buster_armhf.img & mount, to recover u-boot file)
 steps:
   - mkimg: "{{ output }}"
-    size: 2G
+    size: 3G
 
   - mklabel: msdos
     device: "{{ output }}"
