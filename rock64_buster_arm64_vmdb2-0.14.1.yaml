@@ -31,9 +31,6 @@ steps:
     - non-free
     unless: rootfs_unpacked
 
-  - fstab: root
-    unless: rootfs_unpacked
-
   - chroot: root
     shell: |
       sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
@@ -58,6 +55,8 @@ steps:
     contents: |+
       Rock64
 
+  - fstab: root
+
   - create-file: /etc/flash-kernel/machine
     contents: |+
       Pine64 Rock64
@@ -65,7 +64,7 @@ steps:
   - chroot: root
     shell: |
       sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g" /etc/default/flash-kernel
-      flash-kernel
+      update-initramfs -u
       rm /etc/flash-kernel/machine
 
       sed -i "s_root:\*:_root::_g" /etc/shadow

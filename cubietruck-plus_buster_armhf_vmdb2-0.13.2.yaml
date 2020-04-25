@@ -32,11 +32,6 @@ steps:
     - non-free
     unless: rootfs_unpacked
 
-  - chroot: root
-    shell: |
-      echo "/dev/mmcblk0p1 / ext4 noatime,nodiratime,errors=remount-ro 0 1" > /etc/fstab
-    unless: rootfs_unpacked
-
   - apt: install
     packages:
       - linux-image-armmp-lpae
@@ -54,11 +49,12 @@ steps:
 
   - chroot: root
     shell: |
+      echo "/dev/mmcblk0p1 / ext4 noatime,nodiratime,errors=remount-ro 0 1" > /etc/fstab
       echo "CubietruckPlus" > /etc/hostname
 
       echo "Cubietech Cubietruck Plus" > /etc/flash-kernel/machine
       sed -i "s_quiet_root=/dev/mmcblk0p1 net.ifnames=0_g" /etc/default/flash-kernel
-      flash-kernel
+      update-initramfs -u
       rm /etc/flash-kernel/machine
 
       sed -i "s_root:\*:_root::_g" /etc/shadow
