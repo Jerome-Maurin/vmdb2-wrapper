@@ -1,7 +1,11 @@
 # Use like this : sudo vmdb2 rock64_buster_arm64_vmdb2-0.14.1.yaml --output rock64_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 steps:
   - mkimg: "{{ output }}"
+<<<<<<< HEAD
     size: 2G
+=======
+    size: 3G
+>>>>>>> remotes/origin/master
 
   - mklabel: msdos
     device: "{{ output }}"
@@ -31,9 +35,12 @@ steps:
     - non-free
     unless: rootfs_unpacked
 
+<<<<<<< HEAD
   - fstab: root
     unless: rootfs_unpacked
 
+=======
+>>>>>>> remotes/origin/master
   - chroot: root
     shell: |
       sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
@@ -58,6 +65,11 @@ steps:
     contents: |+
       Rock64
 
+<<<<<<< HEAD
+=======
+  - fstab: root
+
+>>>>>>> remotes/origin/master
   - create-file: /etc/flash-kernel/machine
     contents: |+
       Pine64 Rock64
@@ -65,7 +77,11 @@ steps:
   - chroot: root
     shell: |
       sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g" /etc/default/flash-kernel
+<<<<<<< HEAD
       flash-kernel
+=======
+      update-initramfs -u
+>>>>>>> remotes/origin/master
       rm /etc/flash-kernel/machine
 
       sed -i "s_root:\*:_root::_g" /etc/shadow
