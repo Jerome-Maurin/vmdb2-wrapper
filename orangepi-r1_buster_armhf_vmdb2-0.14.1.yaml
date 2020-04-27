@@ -93,16 +93,16 @@ steps:
 
   - root-fs: root
     shell: |
-      curl -o $ROOT/linux-u-boot-orangepi-r1_5.90_armhf.deb https://apt.armbian.com/pool/main/l/linux-u-boot-orangepi-r1-default/linux-u-boot-orangepi-r1_5.90_armhf.deb
+      wget https://apt.armbian.com/pool/main/l/linux-u-boot-orangepi-r1-current/linux-u-boot-current-orangepi-r1_20.02.1_armhf.deb
 
   - chroot: root
     shell: |
-      dpkg -i linux-u-boot-orangepi-r1_5.90_armhf.deb
-      rm linux-u-boot-orangepi-r1_5.90_armhf.deb
+      dpkg -i linux-u-boot-current-orangepi-r1_20.02.1_armhf.deb
+      rm linux-u-boot-current-orangepi-r1_20.02.1_armhf.deb
 
   - root-fs: root
     shell: |
-      dd conv=fsync,notrunc if=$ROOT/usr/lib/linux-u-boot-orangepi-r1_5.90_armhf/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
+      dd conv=fsync,notrunc if=$ROOT/usr/lib/linux-u-boot-current-orangepi-r1_20.02.1_armhf/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
