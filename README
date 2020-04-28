@@ -1,7 +1,11 @@
-Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml):
+Simple wrapper for vmdb2, to build armhf & arm64 boards images using u-boot Debian packages, flash-kernel and Debian kernels.
+
+Install right version of vmdb2 to use (see yaml file suffix).
+
+Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, default):
 
 qemu-user-static binfmt-support
 
-vmdb2 command example:
+vmdb2 command example (working per yaml file example command on first line comment):
 
 sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
