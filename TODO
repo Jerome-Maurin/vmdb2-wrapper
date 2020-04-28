@@ -2,3 +2,4 @@
 - Add ansible role juste befor emptying /etc/resolv.conf
 - On Orange Pi R1, after ansible is added, add eth1 to network/interfaces
 - Fix details of mount parameters to minimize writes to SD card (no journal, etc.)
+- Add comments in yaml files
