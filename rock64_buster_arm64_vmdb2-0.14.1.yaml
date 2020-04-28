@@ -33,8 +33,24 @@ steps:
 
   - apt: install
     packages:
+      - initramfs-tools
+    tag: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      mv /etc/kernel/postinst.d/initramfs-tools /
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
       - linux-image-arm64
     tag: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      mv /initramfs-tools /etc/kernel/postinst.d/
     unless: rootfs_unpacked
 
   - apt: install
@@ -61,7 +77,7 @@ steps:
       sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
 
       sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g" /etc/default/flash-kernel
-      update-initramfs -u
+      update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
       rm /etc/flash-kernel/machine
 
       sed -i "s_root:\*:_root::_g" /etc/shadow
