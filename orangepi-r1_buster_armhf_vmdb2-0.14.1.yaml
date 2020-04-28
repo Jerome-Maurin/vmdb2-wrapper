@@ -93,7 +93,7 @@ steps:
 
   - root-fs: root
     shell: |
-      wget https://apt.armbian.com/pool/main/l/linux-u-boot-orangepi-r1-current/linux-u-boot-current-orangepi-r1_20.02.1_armhf.deb
+      curl -o $ROOT/linux-u-boot-current-orangepi-r1_20.02.1_armhf.deb https://apt.armbian.com/pool/main/l/linux-u-boot-orangepi-r1-current/linux-u-boot-current-orangepi-r1_20.02.1_armhf.deb
 
   - chroot: root
     shell: |
