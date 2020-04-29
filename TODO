@@ -1,3 +1,4 @@
+- Dont use root= in /etc/default/flash-kernel, contents of /etc/fstab in initramfs should suffice instead
 - Add correct support for uuid in initramfs fsck, see logs
 - Add ansible role juste befor emptying /etc/resolv.conf
 - On Orange Pi R1, after ansible is added, add eth1 to network/interfaces
