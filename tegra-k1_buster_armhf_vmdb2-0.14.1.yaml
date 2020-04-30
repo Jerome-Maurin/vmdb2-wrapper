@@ -1,0 +1,105 @@
+# Use like this : sudo vmdb2 tegra-k1_buster_armhf_vmdb2-0.14.1.yaml --output tegra-k1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
+steps:
+  - mkimg: "{{ output }}"
+    size: 3G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 0%
+    end: 100%
+    tag: root
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
+
+  - mount: root
+
+  - unpack-rootfs: root
+
+  - qemu-debootstrap: buster
+    mirror: http://ftp.de.debian.org/debian
+    target: root
+    arch: armhf
+    components:
+    - main
+    - contrib
+    - non-free
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - initramfs-tools
+    tag: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      mv /etc/kernel/postinst.d/initramfs-tools /
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - linux-image-armmp-lpae
+    tag: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      mv /initramfs-tools /etc/kernel/postinst.d/
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - flash-kernel
+    tag: root
+    unless: rootfs_unpacked
+
+  - cache-rootfs: root
+    unless: rootfs_unpacked
+
+  - create-file: /etc/hostname
+    contents: |+
+      JetsonTK1
+
+  - fstab: root
+
+  - create-file: /etc/flash-kernel/machine
+    contents: |+
+      NVIDIA Tegra124 Jetson TK1
+
+  - chroot: root
+    shell: |
+      sed -i "s_/ ext4 errors=remount-ro_HACK ext4 noatime,nodiratime,errors=remount-ro_g" /etc/fstab
+
+      sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g" /etc/default/flash-kernel
+      update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
+      rm /etc/flash-kernel/machine
+
+      sed -i "s_root:\*:_root::_g" /etc/shadow
+
+  - apt: install
+    packages:
+      - u-boot-tegra
+    tag: root 
+
+#  - root-fs: root
+#    shell: |
+#      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/jetson-tk1/u-boot-tegra.bin of={{ output }} bs=1024 seek=8
+
+  - create-file: /etc/network/interfaces.d/lo
+    contents: |+
+      auto lo
+      iface lo inet loopback
+
+  - create-file: /etc/network/interfaces.d/eth0
+    contents: |+
+      auto eth0
+      iface eth0 inet dhcp
+
+  - create-file: /etc/resolv.conf
+    contents: |
