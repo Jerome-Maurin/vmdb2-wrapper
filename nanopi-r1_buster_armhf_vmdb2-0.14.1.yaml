@@ -55,6 +55,7 @@ steps:
 
   - apt: install
     packages:
+      - firmware-brcm80211
       - flash-kernel
     tag: root
     unless: rootfs_unpacked
