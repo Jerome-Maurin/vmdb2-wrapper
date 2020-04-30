@@ -89,7 +89,7 @@ steps:
     shell: |
       dpkg -i linux-dtb-current-sunxi_20.02.11_armhf.deb
       cp /boot/dtb-5.4.31-sunxi/sun8i-h3-nanopi-r1.dtb /usr/lib/linux-image-*-armmp-lpae/
-      dpkg -P linux-dtb-current-sunxi_20.02.11_armhf.deb
+      dpkg -P linux-dtb-current-sunxi
 
   - chroot: root
     shell: |
