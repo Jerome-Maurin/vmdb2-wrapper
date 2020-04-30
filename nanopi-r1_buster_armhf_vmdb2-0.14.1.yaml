@@ -64,7 +64,7 @@ steps:
 
   - create-file: /etc/hostname
     contents: |+
-      OrangePiR1
+      NanoPiR1
 
   - fstab: root
 
@@ -79,7 +79,7 @@ steps:
 
   - create-file: /etc/flash-kernel/machine
     contents: |+
-      Machine: FriendlyArm NanoPi R1
+      FriendlyArm NanoPi R1
 
   - root-fs: root
     shell: |
