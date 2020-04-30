@@ -93,9 +93,9 @@ steps:
 
   - root-fs: root
     shell: |
-      dd if=$ROOT/usr/lib/linux-u-boot-rock64_5.98_arm64/idbloader.bin of={{ output }} seek=64 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-rock64_5.98_arm64/uboot.img of={{ output }} seek=16384 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-rock64_5.98_arm64/trust.bin of={{ output }} seek=24576 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_20.02.1_arm64/idbloader.bin of={{ output }} seek=64 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_20.02.1_arm64/uboot.img of={{ output }} seek=16384 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_20.02.1_arm64/trust.bin of={{ output }} seek=24576 conv=fsync,notrunc
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
