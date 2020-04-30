@@ -84,12 +84,12 @@ steps:
 
   - root-fs: root
     shell: |
-      curl -o $ROOT/linux-u-boot-current-cubietruck_20.02.1_armhf.deb https://apt.armbian.com/pool/main/l/linux-u-boot-cubietruck-current/linux-u-boot-current-cubietruck_20.02.1_armhf.deb
+      curl -o $ROOT/linux-u-boot-current-rock64_20.02.1_arm64.deb https://apt.armbian.com/pool/main/l/linux-u-boot-rock64-current/linux-u-boot-current-rock64_20.02.1_arm64.deb
 
   - chroot: root
     shell: |
-      dpkg -i linux-u-boot-current-cubietruck_20.02.1_armhf.deb
-      rm linux-u-boot-current-cubietruck_20.02.1_armhf.deb
+      dpkg -i linux-u-boot-current-rock64_20.02.1_arm64.deb
+      rm linux-u-boot-current-rock64_20.02.1_arm64.deb
 
   - root-fs: root
     shell: |
