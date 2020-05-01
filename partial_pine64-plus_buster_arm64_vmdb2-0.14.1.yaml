@@ -85,7 +85,7 @@ steps:
   - apt: install
     packages:
       - u-boot-sunxi
-    tag: root 
+    tag: root
 
 #  - root-fs: root
 #    shell: |
