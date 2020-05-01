@@ -64,7 +64,7 @@ steps:
 
   - create-file: /etc/hostname
     contents: |+
-      CubietruckPlus
+      Cubietruck
 
   - fstab: root
 
