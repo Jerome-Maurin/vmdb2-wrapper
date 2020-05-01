@@ -55,7 +55,6 @@ steps:
 
   - apt: install
     packages:
-      - firmware-brcm80211
       - flash-kernel
     tag: root
     unless: rootfs_unpacked
@@ -82,6 +81,11 @@ steps:
     contents: |+
       FriendlyArm NanoPi R1
 
+  - apt: install
+    packages:
+      - firmware-brcm80211
+
+    tag: root
   - root-fs: root
     shell: |
       curl -o $ROOT/linux-dtb-current-sunxi_20.02.11_armhf.deb https://apt.armbian.com/pool/main/l/linux-5.4.31-sunxi/linux-dtb-current-sunxi_20.02.11_armhf.deb
