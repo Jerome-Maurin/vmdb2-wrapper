@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 tegra-x1_buster_arm64_vmdb2-0.14.1.yaml --output tegra-x1_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
+# Use like this : sudo vmdb2 jetson-tk1_buster_armhf_vmdb2-0.14.1.yaml --output jetson-tk1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 steps:
   - mkimg: "{{ output }}"
     size: 3G
@@ -24,7 +24,7 @@ steps:
   - qemu-debootstrap: buster
     mirror: http://ftp.de.debian.org/debian
     target: root
-    arch: arm64
+    arch: armhf
     components:
     - main
     - contrib
@@ -44,7 +44,7 @@ steps:
 
   - apt: install
     packages:
-      - linux-image-arm64
+      - linux-image-armmp-lpae
     tag: root
     unless: rootfs_unpacked
 
@@ -64,13 +64,13 @@ steps:
 
   - create-file: /etc/hostname
     contents: |+
-      JetsonTX1
+      JetsonTK1
 
   - fstab: root
 
   - create-file: /etc/flash-kernel/machine
     contents: |+
-      NVIDIA Jetson TX1 Developer Kit
+      NVIDIA Tegra124 Jetson TK1
 
   - chroot: root
     shell: |
@@ -89,7 +89,7 @@ steps:
 
 #  - root-fs: root
 #    shell: |
-#      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/p2371-2180/u-boot.bin of={{ output }} bs=1024 seek=8
+#      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/jetson-tk1/u-boot-tegra.bin of={{ output }} bs=1024 seek=8
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
