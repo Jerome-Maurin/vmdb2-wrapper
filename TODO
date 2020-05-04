@@ -1,5 +1,5 @@
 - All kernel in backports ?
-- Could not use root= in /etc/default/flash-kernel, contents of /etc/fstab in initramfs should suffice, but root= seems good practice
+- Would be possible not to use root= in /etc/default/flash-kernel, contents of /etc/fstab in initramfs should suffice, but root= seems good practice
 - Generalize initramfs fsck hook ? fixed in cubietruck only for the moment, needs testing
 - Add ssh and local user (add README explanations)
 - Add ansible role juste before emptying /etc/resolv.conf
