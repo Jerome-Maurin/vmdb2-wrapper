@@ -44,7 +44,7 @@ steps:
 
   - apt: install
     packages:
-      - linux-image-armhf
+      - linux-image-armmp-lpae
     tag: root
     unless: rootfs_unpacked
 

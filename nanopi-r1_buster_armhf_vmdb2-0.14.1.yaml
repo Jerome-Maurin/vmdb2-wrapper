@@ -39,17 +39,12 @@ steps:
 
   - chroot: root
     shell: |
+      echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian buster-updates main contrib non-free" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian buster-backports main contrib non-free" >> /etc/apt/sources.list
+      apt-get update
       mv /etc/kernel/postinst.d/initramfs-tools /
-    unless: rootfs_unpacked
-
-  - apt: install
-    packages:
-      - linux-image-armhf
-    tag: root
-    unless: rootfs_unpacked
-
-  - chroot: root
-    shell: |
+      apt-get install -t buster-backports linux-image-armmp-lpae
       mv /initramfs-tools /etc/kernel/postinst.d/
     unless: rootfs_unpacked
 
@@ -70,7 +65,7 @@ steps:
 
   - create-file: /etc/flash-kernel/db
     contents: |+
-      Machine: FriendlyArm NanoPi R1
+      Machine: FriendlyElec NanoPi-R1
       Kernel-Flavors: armmp armmp-lpae
       Boot-Script-Path: /boot/boot.scr
       DTB-Id: sun8i-h3-nanopi-r1.dtb
@@ -79,7 +74,7 @@ steps:
 
   - create-file: /etc/flash-kernel/machine
     contents: |+
-      FriendlyArm NanoPi R1
+      FriendlyElec NanoPi-R1
 
   - apt: install
     packages:
@@ -93,8 +88,81 @@ steps:
   - chroot: root
     shell: |
       dpkg -i linux-dtb-current-sunxi_20.02.11_armhf.deb
-      cp /boot/dtb-5.4.31-sunxi/sun8i-h3-nanopi-r1.dtb /usr/lib/linux-image-*-armmp-lpae/
+      mkdir -p /boot/armbian-dtb
+      cp /boot/dtb-5.4.31-sunxi/sun8i-h3-nanopi-r1.dtb /boot/armbian-dtb/
+# /usr/lib/linux-image-*-armmp-lpae/
       dpkg -P linux-dtb-current-sunxi
+
+  - create-file: /etc/kernel/postinst.d/aaa-copy-armbian-dtb
+    contents: |+
+      #!/bin/sh -e
+      
+      version="$1"
+      
+      # passing the kernel version is required
+      if [ -z "${version}" ]; then
+      	echo >&2 "W: copy-armbian-dtb: ${DPKG_MAINTSCRIPT_PACKAGE:-kernel package} did not pass a version number"
+      	exit 2
+      fi
+      
+      # only works with specified in /etc/flash-kerne/db boards, builtin supported boards' dtb should be in kernel pkg
+      cp /boot/armbian-dtb/$(grep DTB-Id /etc/flash-kernel/db | sed "s_.*DTB-Id: __g") /lib/linux-image-${version}/
+
+  - create-file: /lib/firmware/brcm/brcmfmac43430-sdio.txt
+    contents: |+
+      #AP6212_NVRAM_V1.0_20140603
+      # 2.4 GHz, 20 MHz BW mode
+      
+      # The following parameter values are just placeholders, need to be updated.
+      manfid=0x2d0
+      prodid=0x0726
+      vendid=0x14e4
+      devid=0x43e2
+      boardtype=0x0726
+      boardrev=0x1101
+      boardnum=22
+      macaddr=00:90:4c:c5:12:38
+      sromrev=11
+      boardflags=0x00404201
+      xtalfreq=26000
+      nocrc=1
+      ag0=255
+      aa2g=1
+      ccode=ALL
+      
+      pa0itssit=0x20
+      extpagain2g=0
+      
+      #PA parameters for 2.4GHz, measured at CHIP OUTPUT
+      pa2ga0=-168,7161,-820
+      AvVmid_c0=0x0,0xc8
+      cckpwroffset0=5
+      
+      # PPR params
+      maxp2ga0=90
+      txpwrbckof=6
+      cckbw202gpo=0x5555
+      legofdmbw202gpo=0x77777777
+      mcsbw202gpo=0xaaaaaaaa
+      
+      # OFDM IIR :
+      ofdmdigfilttype=7
+      # PAPD mode:
+      papdmode=2
+      
+      il0macaddr=00:90:4c:c5:12:38
+      wl0id=0x431b
+      
+      #OOB parameters
+      hostwake=0x40
+      hostrdy=0x41
+      usbrdy=0x03
+      usbrdydelay=100
+      deadman_to=0xffffffff
+      # muxenab: 0x1 for UART enable, 0x10 for Host awake
+      muxenab=0x10
+      # CLDO PWM voltage settings - 0x4 - 1.1 volt
+      #cldo_pwm=0x4
 
   - chroot: root
     shell: |
