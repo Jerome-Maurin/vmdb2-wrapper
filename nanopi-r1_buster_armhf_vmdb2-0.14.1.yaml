@@ -44,7 +44,7 @@ steps:
       echo "deb http://ftp.de.debian.org/debian buster-backports main contrib non-free" >> /etc/apt/sources.list
       apt-get update
       mv /etc/kernel/postinst.d/initramfs-tools /
-      apt-get install -t buster-backports linux-image-armmp-lpae
+      apt-get install -y -t buster-backports linux-image-armmp-lpae
       mv /initramfs-tools /etc/kernel/postinst.d/
     unless: rootfs_unpacked
 
@@ -79,8 +79,8 @@ steps:
   - apt: install
     packages:
       - firmware-brcm80211
-
     tag: root
+
   - root-fs: root
     shell: |
       curl -o $ROOT/linux-dtb-current-sunxi_20.02.11_armhf.deb https://apt.armbian.com/pool/main/l/linux-5.4.31-sunxi/linux-dtb-current-sunxi_20.02.11_armhf.deb
@@ -90,8 +90,8 @@ steps:
       dpkg -i linux-dtb-current-sunxi_20.02.11_armhf.deb
       mkdir -p /boot/armbian-dtb
       cp /boot/dtb-5.4.31-sunxi/sun8i-h3-nanopi-r1.dtb /boot/armbian-dtb/
-# /usr/lib/linux-image-*-armmp-lpae/
       dpkg -P linux-dtb-current-sunxi
+      rm linux-dtb-current-sunxi_20.02.11_armhf.deb
 
   - create-file: /etc/kernel/postinst.d/aaa-copy-armbian-dtb
     contents: |+
