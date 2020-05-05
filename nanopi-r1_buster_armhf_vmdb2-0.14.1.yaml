@@ -63,27 +63,58 @@ steps:
 
   - fstab: root
 
-  - create-file: /etc/flash-kernel/db
-    contents: |+
-      Machine: FriendlyElec NanoPi-R1
-      Kernel-Flavors: armmp armmp-lpae
-      Boot-Script-Path: /boot/boot.scr
-      DTB-Id: sun8i-h3-nanopi-r1.dtb
-      U-Boot-Script-Name: bootscr.sunxi
-      Required-Packages: u-boot-tools
-
-  - create-file: /etc/flash-kernel/machine
-    contents: |+
-      FriendlyElec NanoPi-R1
-
-  - apt: install
-    packages:
-      - firmware-brcm80211
-    tag: root
-
   - root-fs: root
     shell: |
       curl -o $ROOT/linux-dtb-current-sunxi_20.02.11_armhf.deb https://apt.armbian.com/pool/main/l/linux-5.4.31-sunxi/linux-dtb-current-sunxi_20.02.11_armhf.deb
+
+  - create-file: /etc/kernel/postinst.d/add-armbian-dtb
+    contents: |+
+      #!/bin/sh -e
+      
+      version="$1"
+      
+      # passing the kernel version is required
+      if [ -z "${version}" ]; then
+      	echo >&2 "W: add-armbian-dtb: ${DPKG_MAINTSCRIPT_PACKAGE:-kernel package} did not pass a version number"
+      	exit 2
+      fi
+      
+      # only works with boards specified in /etc/flash-kerne/db, flash-kernel supported boards' dtb should be in kernel pkg
+      dtbfile=$(grep DTB-Id /etc/flash-kernel/db | sed "s_.*DTB-Id: __g")
+      
+      if [ -e "/lib/linux-image-${version}/${dtbfile}" ]; then
+              echo "I: This board is supported in this Debian kernel"
+              echo "I: Skipping adding dtb imported from Armbian to new kernel"
+      	exit 0
+      fi
+      
+      echo "I: This board is not supported in this Debian kernel"
+      echo "I: Adding ${dtbfile} imported from Armbian to /lib/linux-image-${version}/"
+      
+      cp /boot/armbian-dtb/${dtbfile} /lib/linux-image-${version}/
+
+  - create-file: /etc/kernel/postrm.d/add-armbian-dtb
+    contents: |+
+      #!/bin/sh -e
+      
+      version="$1"
+      
+      # passing the kernel version is required
+      if [ -z "${version}" ]; then
+      	echo >&2 "W: add-armbian-dtb: ${DPKG_MAINTSCRIPT_PACKAGE:-kernel package} did not pass a version number"
+      	exit 2
+      fi
+      
+      # only works with boards specified in /etc/flash-kerne/db, flash-kernel supported boards' dtb should be in kernel pkg
+      dtbfile=$(grep DTB-Id /etc/flash-kernel/db | sed "s_.*DTB-Id: __g")
+      
+      if [ ! -e "/lib/linux-image-${version}/${dtbfile}" ]; then
+      	exit 0
+      fi
+      
+      echo "I: Removing Armbian's ${dtbfile} from /lib/linux-image-${version}/ added on kernel install"
+      
+      rm /lib/linux-image-${version}/${dtbfile}
 
   - chroot: root
     shell: |
@@ -92,21 +123,14 @@ steps:
       cp /boot/dtb-5.4.31-sunxi/sun8i-h3-nanopi-r1.dtb /boot/armbian-dtb/
       dpkg -P linux-dtb-current-sunxi
       rm linux-dtb-current-sunxi_20.02.11_armhf.deb
+      chmod +x /etc/kernel/postinst.d/add-armbian-dtb
+      chmod +x /etc/kernel/postrm.d/add-armbian-dtb
+      cp /boot/armbian-dtb/sun8i-h3-nanopi-r1.dtb /usr/lib/linux-image-*-armmp-lpae/
 
-  - create-file: /etc/kernel/postinst.d/aaa-copy-armbian-dtb
-    contents: |+
-      #!/bin/sh -e
-      
-      version="$1"
-      
-      # passing the kernel version is required
-      if [ -z "${version}" ]; then
-      	echo >&2 "W: copy-armbian-dtb: ${DPKG_MAINTSCRIPT_PACKAGE:-kernel package} did not pass a version number"
-      	exit 2
-      fi
-      
-      # only works with specified in /etc/flash-kerne/db boards, builtin supported boards' dtb should be in kernel pkg
-      cp /boot/armbian-dtb/$(grep DTB-Id /etc/flash-kernel/db | sed "s_.*DTB-Id: __g") /lib/linux-image-${version}/
+  - apt: install
+    packages:
+      - firmware-brcm80211
+    tag: root
 
   - create-file: /lib/firmware/brcm/brcmfmac43430-sdio.txt
     contents: |+
@@ -163,6 +187,19 @@ steps:
       muxenab=0x10
       # CLDO PWM voltage settings - 0x4 - 1.1 volt
       #cldo_pwm=0x4
+
+  - create-file: /etc/flash-kernel/db
+    contents: |+
+      Machine: FriendlyElec NanoPi-R1
+      Kernel-Flavors: armmp armmp-lpae
+      Boot-Script-Path: /boot/boot.scr
+      DTB-Id: sun8i-h3-nanopi-r1.dtb
+      U-Boot-Script-Name: bootscr.sunxi
+      Required-Packages: u-boot-tools
+
+  - create-file: /etc/flash-kernel/machine
+    contents: |+
+      FriendlyElec NanoPi-R1
 
   - chroot: root
     shell: |
