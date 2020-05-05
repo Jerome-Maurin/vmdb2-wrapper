@@ -81,12 +81,17 @@ steps:
     contents: |+
       Xunlong Orange Pi R1
 
+  - root-fs: root
+    shell: |
+      mount -o bind /dev/ $ROOT/dev/
+
   - chroot: root
     shell: |
       sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
 
       sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g" /etc/default/flash-kernel
       update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
+      umount /dev/
       rm /etc/flash-kernel/machine
 
       sed -i "s_root:\*:_root::_g" /etc/shadow

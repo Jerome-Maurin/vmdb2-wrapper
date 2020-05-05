@@ -63,10 +63,6 @@ steps:
 
   - fstab: root
 
-  - create-file: /etc/flash-kernel/machine
-    contents: |+
-      Cubietech Cubietruck
-
   - apt: install
     packages:
       - firmware-brcm80211
@@ -130,6 +126,10 @@ steps:
       btc_params0=5000
       btc_params1=1000
       btc_params6=63
+
+  - create-file: /etc/flash-kernel/machine
+    contents: |+
+      Cubietech Cubietruck
 
   - root-fs: root
     shell: |
