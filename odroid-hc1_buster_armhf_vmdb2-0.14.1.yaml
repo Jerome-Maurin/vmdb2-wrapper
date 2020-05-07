@@ -85,19 +85,19 @@ steps:
 # With the machine file remaining in /etc/flash-kernel, the right dtb should be chosen to put in /boot/
   - root-fs: root
     shell: |
-      curl -o $ROOT/linux-u-boot-current-odroidxu4_20.02.7_armhf.deb https://apt.armbian.com/pool/main/l/linux-u-boot-odroidxu4-current/linux-u-boot-current-odroidxu4_20.02.7_armhf.deb
+      curl -o $ROOT/linux-u-boot-current-odroidxu4_20.02.1_armhf.deb https://apt.armbian.com/pool/main/l/linux-u-boot-odroidxu4-current/linux-u-boot-current-odroidxu4_20.02.1_armhf.deb
 
   - chroot: root
     shell: |
-      dpkg -i linux-u-boot-current-odroidxu4_20.02.7_armhf.deb
-      rm linux-u-boot-current-odroidxu4_20.02.7_armhf.deb
+      dpkg -i linux-u-boot-current-odroidxu4_20.02.1_armhf.deb
+      rm linux-u-boot-current-odroidxu4_20.02.1_armhf.deb
 
   - root-fs: root
     shell: |
-      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_20.02.7_armhf/bl1.bin.hardkernel of={{ output }} seek=1 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_20.02.7_armhf/bl2.bin.hardkernel.720k_uboot of={{ output }} seek=31 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_20.02.7_armhf/u-boot-dtb.bin of={{ output }} bs=512 seek=63 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_20.02.7_armhf/tzsw.bin.hardkernel of={{ output }} seek=1503 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_20.02.1_armhf/bl1.bin.hardkernel of={{ output }} seek=1 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_20.02.1_armhf/bl2.bin.hardkernel.720k_uboot of={{ output }} seek=31 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_20.02.1_armhf/u-boot-dtb.bin of={{ output }} bs=512 seek=63 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_20.02.1_armhf/tzsw.bin.hardkernel of={{ output }} seek=1503 conv=fsync,notrunc
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
