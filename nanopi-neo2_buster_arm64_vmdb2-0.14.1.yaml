@@ -39,17 +39,12 @@ steps:
 
   - chroot: root
     shell: |
+      echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian buster-updates main contrib non-free" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian buster-backports main contrib non-free" >> /etc/apt/sources.list
+      apt-get update
       mv /etc/kernel/postinst.d/initramfs-tools /
-    unless: rootfs_unpacked
-
-  - apt: install
-    packages:
-      - linux-image-arm64
-    tag: root
-    unless: rootfs_unpacked
-
-  - chroot: root
-    shell: |
+      apt-get install -y -t buster-backports linux-image-arm64
       mv /initramfs-tools /etc/kernel/postinst.d/
     unless: rootfs_unpacked
 
@@ -72,12 +67,17 @@ steps:
     contents: |+
       FriendlyARM NanoPi NEO 2
 
+  - root-fs: root
+    shell: |
+      mount -o bind /dev/ $ROOT/dev/
+
   - chroot: root
     shell: |
       sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
 
       sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g" /etc/default/flash-kernel
       update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
+      umount /dev/
       rm /etc/flash-kernel/machine
 
       sed -i "s_root:\*:_root::_g" /etc/shadow

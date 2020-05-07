@@ -1,15 +1,10 @@
-- Dont use root= in /etc/default/flash-kernel, contents of /etc/fstab in initramfs should suffice instead
-- Add correct support for uuid in initramfs fsck, see logs
-- Add ansible role juste befor emptying /etc/resolv.conf
-- On Orange Pi R1, after ansible is added, add eth1 to network/interfaces
-- All kernel in backports ?
+- Add crda for Wi-Fi
 - Would be possible not to use root= in /etc/default/flash-kernel, contents of /etc/fstab in initramfs should suffice, but root= seems good practice
-- Generalize initramfs fsck hook ? fixed in cubietruck only for the moment, needs testing
 - Add ssh and local user (add README explanations)
 - Add ansible role juste before emptying /etc/resolv.conf
 - On OrangePi R1, after ansible is added, add eth1 in dhcp to network/interfaces
 - On NanoPi R1, after ansible is added, add eth1 in dhcp to network/interfaces
 - Fix details of mount parameters to minimize writes to SD card (no journal, etc.)
 - Add comments in yaml files
-- Replace wget by proper apt install for armbian u-boots
+- Replace wget by proper apt install for armbian u-boots ?
 - Add https support ? not yet, invalid cert domain for DE mirror
