@@ -85,7 +85,7 @@ steps:
 # With the machine file remaining in /etc/flash-kernel, the right dtb should be chosen to put in /boot/
   - root-fs: root
     shell: |
-      curl -o $ROOT/u-boot.tar.gz https://github.com/hardkernel/u-boot/releases/download/travis%2Fodroidxu3-108/u-boot-odroidxu3-108.tar.gz
+      curl -L -o $ROOT/u-boot.tar.gz https://github.com/hardkernel/u-boot/releases/download/travis%2Fodroidxu3-108/u-boot-odroidxu3-108.tar.gz
       tar xf $ROOT/u-boot.tar.gz
       rm $ROOT/u-boot.tar.gz
       dd if=$ROOT/sd_fuse/bl1.bin.hardkernel of={{ output }} seek=1 conv=fsync,notrunc
