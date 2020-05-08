@@ -96,6 +96,7 @@ steps:
     shell: |
       dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_5.98_armhf/bl1.bin.hardkernel of={{ output }} seek=1 conv=fsync,notrunc
       dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_5.98_armhf/bl2.bin.hardkernel.720k_uboot of={{ output }} seek=31 conv=fsync,notrunc
+      sed -i s_odroidxu4_odroidhc1_g $ROOT/usr/lib/linux-u-boot-current-odroidxu4_5.98_armhf/u-boot-dtb.bin
       dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_5.98_armhf/u-boot-dtb.bin of={{ output }} bs=512 seek=63 conv=fsync,notrunc
       dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_5.98_armhf/tzsw.bin.hardkernel of={{ output }} seek=1503 conv=fsync,notrunc
 
