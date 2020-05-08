@@ -80,11 +80,26 @@ steps:
       fi
       
       # only works with boards specified in /etc/flash-kerne/db, flash-kernel supported boards' dtb should be in kernel pkg
+      if [ ! -e "/etc/flash-kernel/db" ]; then
+      	echo >&2 "W: add-armbian-dtb: Missing /etc/flash-kernel/db, add-armbian-dtb cannot continue"
+      	exit 1
+      fi
+      
       dtbfile=$(grep DTB-Id /etc/flash-kernel/db | sed "s_.*DTB-Id: __g")
       
+      # only works with available /boot/armbian-dtb/${dtbfile}
+      if [ ! -e "/boot/armbian-dtb/${dtbfile}" ]; then
+      	echo >&2 "W: add-armbian-dtb: Missing /boot/armbian-dtb/${dtbfile}, add-armbian-dtb cannot continue"
+      	exit 1
+      fi
+      
       if [ -e "/lib/linux-image-${version}/${dtbfile}" ]; then
-              echo "I: This board is supported in this Debian kernel"
-              echo "I: Skipping adding dtb imported from Armbian to new kernel"
+        if cmp -s /boot/armbian-dtb/${dtbfile} /lib/linux-image-${version}/${dtbfile}; then
+          echo "I: ${dtbfile} imported from Armbian is already in /lib/linux-image-${version}/"
+        else
+          echo "I: This board is supported in this Debian kernel"
+        fi
+        echo "I: Skipping adding dtb imported from Armbian to new kernel"
       	exit 0
       fi
       
@@ -106,16 +121,31 @@ steps:
       fi
       
       # only works with boards specified in /etc/flash-kerne/db, flash-kernel supported boards' dtb should be in kernel pkg
+      if [ ! -e "/etc/flash-kernel/db" ]; then
+      	echo >&2 "W: add-armbian-dtb: Missing /etc/flash-kernel/db, add-armbian-dtb cannot continue"
+      	exit 1
+      fi
+      
       dtbfile=$(grep DTB-Id /etc/flash-kernel/db | sed "s_.*DTB-Id: __g")
+      
+      # only works with available /boot/armbian-dtb/${dtbfile}
+      if [ ! -e "/boot/armbian-dtb/${dtbfile}" ]; then
+      	echo >&2 "W: add-armbian-dtb: Missing /boot/armbian-dtb/${dtbfile}, add-armbian-dtb cannot continue"
+      	exit 1
+      fi
       
       if [ ! -e "/lib/linux-image-${version}/${dtbfile}" ]; then
       	exit 0
       fi
       
-      echo "I: Removing Armbian's ${dtbfile} from /lib/linux-image-${version}/ added on kernel install"
+      if cmp -s /boot/armbian-dtb/${dtbfile} /lib/linux-image-${version}/${dtbfile}; then
+        echo "I: Removing Armbian's ${dtbfile} from /lib/linux-image-${version}/ added on kernel install"
+        rm /lib/linux-image-${version}/${dtbfile}
+      else
+        echo "I: ${dtbfile} in /lib/linux-image-${version}/ is not Armbian's"
+        echo "I: Skipping removing dtb imported from Armbian from /lib/linux-image-${version}/"
+      fi
       
-      rm /lib/linux-image-${version}/${dtbfile}
-
   - chroot: root
     shell: |
       dpkg -i linux-dtb-current-sunxi_20.02.11_armhf.deb
