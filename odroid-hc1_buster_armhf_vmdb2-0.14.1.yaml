@@ -81,24 +81,18 @@ steps:
 
       sed -i "s_root:\*:_root::_g" /etc/shadow
 
-# We use an Odroid XU4 U-Boot, but this one doen't have the fdtfile option set.
+# We use the latest travis build official Hardkernel Odroid XU3/XU4/HC1 U-Boot
 # With the machine file remaining in /etc/flash-kernel, the right dtb should be chosen to put in /boot/
   - root-fs: root
     shell: |
-      curl -o $ROOT/linux-u-boot-current-odroidxu4_5.98_armhf.deb https://apt.armbian.com/pool/main/l/linux-u-boot-odroidxu4-current/linux-u-boot-current-odroidxu4_5.98_armhf.deb
-
-  - chroot: root
-    shell: |
-      dpkg -i linux-u-boot-current-odroidxu4_5.98_armhf.deb
-      rm linux-u-boot-current-odroidxu4_5.98_armhf.deb
-
-  - root-fs: root
-    shell: |
-      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_5.98_armhf/bl1.bin.hardkernel of={{ output }} seek=1 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_5.98_armhf/bl2.bin.hardkernel.720k_uboot of={{ output }} seek=31 conv=fsync,notrunc
-      sed -i s_odroidxu4_odroidhc1_g $ROOT/usr/lib/linux-u-boot-current-odroidxu4_5.98_armhf/u-boot-dtb.bin
-      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_5.98_armhf/u-boot-dtb.bin of={{ output }} bs=512 seek=63 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-odroidxu4_5.98_armhf/tzsw.bin.hardkernel of={{ output }} seek=1503 conv=fsync,notrunc
+      curl -o $ROOT/u-boot.tar.gz https://github.com/hardkernel/u-boot/releases/download/travis%2Fodroidxu3-108/u-boot-odroidxu3-108.tar.gz
+      tar xf $ROOT/u-boot.tar.gz
+      rm $ROOT/u-boot.tar.gz
+      dd if=$ROOT/sd_fuse/bl1.bin.hardkernel of={{ output }} seek=1 conv=fsync,notrunc
+      dd if=$ROOT/sd_fuse/bl2.bin.hardkernel.1mb_uboot of={{ output }} seek=31 conv=fsync,notrunc
+      dd if=$ROOT/sd_fuse/u-boot.bin of={{ output }} bs=512 seek=63 conv=fsync,notrunc
+      dd if=$ROOT/sd_fuse/tzsw.bin.hardkernel of={{ output }} seek=2111 conv=fsync,notrunc
+      rm -r $ROOT/sd_fuse
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
