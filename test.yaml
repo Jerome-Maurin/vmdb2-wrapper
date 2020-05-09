@@ -20,24 +20,13 @@ steps:
 
   - unpack-rootfs: root
 
-  - create-file: /etc/default/flash-kernel
-    contents: |
-      LINUX_KERNEL_CMDLINE="quiet"
-      LINUX_KERNEL_CMDLINE_DEFAULTS="" 
-
-
-  - fstab: root
-
-  - chroot: root
+  - root-fs: root
     shell: |
-      sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
+      test -e vmdb2-ansible.yaml || ln -s vmdb2-ansible.yaml.example vmdb2-ansible.yaml
 
-  - chroot: root
-    shell: |
-      sed -i s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1)_g /etc/default/flash-kernel
+  - ansible: root
+    playbook: vmdb2-ansible.yaml
 
   - root-fs: root
     shell: |
-      dd conv=fsync,notrunc if=$ROOT/../../home/local/vmdb2-cubieplus/test.yaml of="{{ output }}" bs=1024 seek=8
-      cat $ROOT/etc/fstab > fst.txt
-      cat $ROOT/etc/default/flash-kernel > fk.txt
+      diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml
