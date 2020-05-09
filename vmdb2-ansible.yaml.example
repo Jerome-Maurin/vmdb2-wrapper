@@ -1,0 +1,8 @@
+# Create a vmdb2-ansible.yaml file for it to be used by vmdb2
+- hosts: image
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: test
+      shell: |
+        echo test

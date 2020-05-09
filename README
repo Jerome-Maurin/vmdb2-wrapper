@@ -6,6 +6,12 @@ Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, 
 
 qemu-user-static binfmt-support
 
+Extra package for ansible use:
+
+ansible
+
 vmdb2 command example (working per yaml file example command on first line comment):
 
 sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
+
+For Ansible use vmdb2-ansible.yaml.exemple as a starting point, create à file named vmdb2-ansible.yaml to write a playbook that will be used by vmdb2

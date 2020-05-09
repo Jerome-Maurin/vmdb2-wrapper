@@ -104,5 +104,16 @@ steps:
       auto eth0
       iface eth0 inet dhcp
 
+  - root-fs: root
+    shell: |
+      test -e vmdb2-ansible.yaml || ln -s vmdb2-ansible.yaml.example vmdb2-ansible.yaml
+
+  - ansible: root
+    playbook: vmdb2-ansible.yaml
+
+  - root-fs: root
+    shell: |
+      diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml
+
   - create-file: /etc/resolv.conf
     contents: |
