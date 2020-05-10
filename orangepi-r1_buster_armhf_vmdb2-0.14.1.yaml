@@ -131,7 +131,7 @@ steps:
     shell: |
       umount $ROOT/dev
       umount $ROOT/proc
-      rm /etc/flash-kernel/machine
+      rm $ROOT/etc/flash-kernel/machine
       diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml || true
 
   - create-file: /etc/resolv.conf
