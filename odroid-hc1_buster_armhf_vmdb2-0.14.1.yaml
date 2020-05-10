@@ -113,7 +113,7 @@ steps:
 
   - root-fs: root
     shell: |
-      diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml
+      diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml || true
 
   - create-file: /etc/resolv.conf
     contents: |
