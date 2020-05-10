@@ -245,7 +245,6 @@ steps:
       sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g" /etc/default/flash-kernel
       update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
       umount /dev/
-      rm /etc/flash-kernel/machine
 
       sed -i "s_root:\*:_root::_g" /etc/shadow
 
@@ -288,7 +287,9 @@ steps:
 
   - root-fs: root
     shell: |
-      umount $ROOT/dev                                                                                                                                 umount $ROOT/proc
+      umount $ROOT/dev
+      umount $ROOT/proc
+      rm /etc/flash-kernel/machine
       diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml || true
 
   - create-file: /etc/resolv.conf
