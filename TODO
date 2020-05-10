@@ -1,5 +1,8 @@
+- Finalize support for Pine64+
+- Finalize support for Jetsons
 - Create an ansible file per vmdb2 file
 - Generate ansible file from vmdb2 file
+- Add Xen support when possible ?
 - Would be possible not to use root= in /etc/default/flash-kernel, contents of /etc/fstab in initramfs should suffice, but root= seems good practice
 - Add ssh and local user (add README explanations)
 - Fix details of mount parameters to minimize writes to SD card (no journal, etc.)
