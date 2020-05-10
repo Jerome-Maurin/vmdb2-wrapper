@@ -1,7 +1,7 @@
-- Add crda for Wi-Fi
+- Create an ansible file per vmdb2 file
+- Generate ansible file from vmdb2 file
 - Would be possible not to use root= in /etc/default/flash-kernel, contents of /etc/fstab in initramfs should suffice, but root= seems good practice
 - Add ssh and local user (add README explanations)
-- Add ansible role juste before emptying /etc/resolv.conf
 - On OrangePi R1, after ansible is added, add eth1 in dhcp to network/interfaces
 - On NanoPi R1, after ansible is added, add eth1 in dhcp to network/interfaces
 - Fix details of mount parameters to minimize writes to SD card (no journal, etc.)
