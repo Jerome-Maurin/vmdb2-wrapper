@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 jetson-tk1_buster_armhf_vmdb2-0.14.1.yaml --output jetson-tk1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
+# Use like this : sudo vmdb2 jetson-tx1_buster_arm64_vmdb2-0.14.1.yaml --output jetson-tx1_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 steps:
   - mkimg: "{{ output }}"
     size: 3G
@@ -24,7 +24,7 @@ steps:
   - qemu-debootstrap: buster
     mirror: http://ftp.de.debian.org/debian
     target: root
-    arch: armhf
+    arch: arm64
     components:
     - main
     - contrib
@@ -44,7 +44,7 @@ steps:
       echo "deb http://ftp.de.debian.org/debian buster-backports main contrib non-free" >> /etc/apt/sources.list
       apt-get update
       mv /etc/kernel/postinst.d/initramfs-tools /
-      apt-get install -y -t buster-backports linux-image-armmp-lpae
+      apt-get install -y -t buster-backports linux-image-arm64
       mv /initramfs-tools /etc/kernel/postinst.d/
     unless: rootfs_unpacked
 
@@ -59,13 +59,13 @@ steps:
 
   - create-file: /etc/hostname
     contents: |+
-      JetsonTK1
+      JetsonTX1
 
   - fstab: root
 
   - create-file: /etc/flash-kernel/machine
     contents: |+
-      NVIDIA Tegra124 Jetson TK1
+      NVIDIA Jetson TX1 Developer Kit
 
   - root-fs: root
     shell: |
@@ -86,9 +86,10 @@ steps:
       - u-boot-tegra
     tag: root 
 
+# U-Boot not needed on SD-Card for Jetsons, eMMC's is used in boot process
 #  - root-fs: root
 #    shell: |
-#      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/jetson-tk1/u-boot-tegra.bin of={{ output }} bs=1024 seek=8
+#      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/p2371-2180/u-boot.bin of={{ output }} bs=1024 seek=8
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
