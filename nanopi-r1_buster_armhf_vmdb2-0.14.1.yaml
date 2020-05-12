@@ -158,11 +158,6 @@ steps:
       chmod +x /etc/kernel/postrm.d/add-armbian-dtb
       cp /boot/armbian-dtb/sun8i-h3-nanopi-r1.dtb /usr/lib/linux-image-*-armmp-lpae/
 
-  - apt: install
-    packages:
-      - firmware-brcm80211
-    tag: root
-
   - create-file: /lib/firmware/brcm/brcmfmac43430-sdio.txt
     contents: |+
       #AP6212_NVRAM_V1.0_20140603
@@ -238,7 +233,7 @@ steps:
 
   - chroot: root
     shell: |
-      apt-get install -y -t buster-backports wireless-regdb
+      apt-get install -y -t buster-backports wireless-regdb firmware-brcm80211
       apt-get install -y crda
 
       sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab

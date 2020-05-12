@@ -64,11 +64,6 @@ steps:
 
   - fstab: root
 
-  - apt: install
-    packages:
-      - firmware-brcm80211
-    tag: root
-
   - create-file: /lib/firmware/brcm/brcmfmac43362-sdio.txt
     contents: |+
       #AP6210_NVRAM_V1.2_03192013
@@ -138,7 +133,7 @@ steps:
 
   - chroot: root
     shell: |
-      apt-get install -y -t buster-backports wireless-regdb
+      apt-get install -y -t buster-backports wireless-regdb firmware-brcm80211
       apt-get install -y crda
 
       sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
