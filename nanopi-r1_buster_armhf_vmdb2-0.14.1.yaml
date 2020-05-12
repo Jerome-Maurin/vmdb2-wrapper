@@ -158,7 +158,7 @@ steps:
       chmod +x /etc/kernel/postrm.d/add-armbian-dtb
       cp /boot/armbian-dtb/sun8i-h3-nanopi-r1.dtb /usr/lib/linux-image-*-armmp-lpae/
 
-      apt-get install -y -t firmware-brcm80211
+      apt-get install -y -t buster-backports firmware-brcm80211
 
   - create-file: /lib/firmware/brcm/brcmfmac43430-sdio.txt
     contents: |+
