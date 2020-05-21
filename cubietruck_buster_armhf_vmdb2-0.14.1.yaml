@@ -39,6 +39,7 @@ steps:
 
   - chroot: root
     shell: |
+      echo "deb http://ftp.de.debian.org/debian buster main contrib non-free" > /etc/apt/sources.list
       echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list
       echo "deb http://ftp.de.debian.org/debian buster-updates main contrib non-free" >> /etc/apt/sources.list
       echo "deb http://ftp.de.debian.org/debian buster-backports main contrib non-free" >> /etc/apt/sources.list
@@ -63,10 +64,9 @@ steps:
 
   - fstab: root
 
-  - apt: install
-    packages:
-      - firmware-brcm80211
-    tag: root
+  - chroot: root
+    shell: |
+      apt-get install -y -t buster-backports firmware-brcm80211
 
   - create-file: /lib/firmware/brcm/brcmfmac43362-sdio.txt
     contents: |+

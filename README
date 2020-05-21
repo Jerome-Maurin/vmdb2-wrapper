@@ -1,4 +1,4 @@
-Simple wrapper for vmdb2, to build armhf & arm64 boards images using u-boot Debian packages, flash-kernel and Debian kernels.
+Simple wrapper for vmdb2, to build armhf & arm64 board images for SD-card using u-boot Debian packages, flash-kernel and Debian kernels.
 
 Install right version of vmdb2 to use (see yaml file suffix).
 
@@ -14,4 +14,4 @@ vmdb2 command example (working per yaml file example command on first line comme
 
 sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
 
-For Ansible use vmdb2-ansible.yaml.exemple as a starting point, create à file named vmdb2-ansible.yaml to write a playbook that will be used by vmdb2
+For Ansible use vmdb2-ansible.yaml.exemple as a starting point, create a file named vmdb2-ansible.yaml to write a playbook that will be used by vmdb2

@@ -39,6 +39,7 @@ steps:
 
   - chroot: root
     shell: |
+      echo "deb http://ftp.de.debian.org/debian buster main contrib non-free" > /etc/apt/sources.list
       echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list
       echo "deb http://ftp.de.debian.org/debian buster-updates main contrib non-free" >> /etc/apt/sources.list
       echo "deb http://ftp.de.debian.org/debian buster-backports main contrib non-free" >> /etc/apt/sources.list
@@ -73,6 +74,8 @@ steps:
 
   - chroot: root
     shell: |
+      apt-get install -y -t buster-backports firmware-misc-nonfree
+
       sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
 
       sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g" /etc/default/flash-kernel
@@ -86,6 +89,7 @@ steps:
       - u-boot-tegra
     tag: root 
 
+# U-Boot not needed on SD-Card for Jetsons, eMMC's is used in boot process
 #  - root-fs: root
 #    shell: |
 #      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/jetson-tk1/u-boot-tegra.bin of={{ output }} bs=1024 seek=8
