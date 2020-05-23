@@ -94,11 +94,10 @@ steps:
 # We use the latest travis build official Hardkernel Odroid N2 U-Boot
   - root-fs: root
     shell: |
-      curl -L -o $ROOT/u-boot.tar.gz https://github.com/hardkernel/u-boot/releases/download/travis%2Fodroidn2-118/u-boot-odroidn2-118.tar.gz
-      tar xf $ROOT/u-boot.tar.gz -C $ROOT
-      rm $ROOT/u-boot.tar.gz
-      dd if=$ROOT/sd_fuse/u-boot.bin of={{ output }} bs=512 seek=1 conv=fsync,notrunc
-      rm -r $ROOT/sd_fuse
+      mkdir $ROOT/boot/u-boot
+      curl -L -o $ROOT/boot/u-boot/u-boot.bin.gz https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/u-boot.bin.odroid-n2_2019.07-rc3-00022-g47bebaa4a3.gz
+      gunzip $ROOT/boot/u-boot/u-boot.bin.gz
+      dd if=$ROOT/boot/u-boot/u-boot.bin of={{ output }} bs=512 seek=1 conv=fsync,notrunc
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
