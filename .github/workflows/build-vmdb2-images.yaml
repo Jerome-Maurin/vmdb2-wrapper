@@ -6,7 +6,10 @@ name: Build images
 # events but only for the master branch
 on:
   push:
-    branches: [ ci-test ]
+    branches: [ ci-test, master ]
+  schedule:
+    - cron:  '* 1 * * *'
+  workflow_dispatch:
 #  pull_request:
 #    branches: [ master ]
 
