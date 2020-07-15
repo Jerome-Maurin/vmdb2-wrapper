@@ -117,7 +117,8 @@ steps:
 
   - create-file: /etc/network/interfaces.d/eth0
     contents: |+
-      auto eth0
+      # Use allow-hotplug because on the Odroid HC1 eth0 is connected through usb which can take some time to be detected
+      allow-hotplug eth0
       iface eth0 inet dhcp
 
   - root-fs: root
