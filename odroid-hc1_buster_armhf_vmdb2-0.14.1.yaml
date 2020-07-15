@@ -87,16 +87,26 @@ steps:
 
       sed -i "s_root:\*:_root::_g" /etc/shadow
 
-# We use the latest travis build official Hardkernel Odroid XU3/XU4/HC1 U-Boot
-# With the machine file remaining in /etc/flash-kernel, the right dtb should be chosen to put in /boot/
+# We use the latest travis build official Hardkernel Odroid XU3/XU4/HC1 U-Boot assets to get the pre-U-Boot binaries (BL1,BL2,TrustZone)
+# We use the latest U-Boot binary from the Debian package u-boot-exynos
   - root-fs: root
     shell: |
       curl -L -o $ROOT/u-boot.tar.gz https://github.com/hardkernel/u-boot/releases/download/travis%2Fodroidxu3-108/u-boot-odroidxu3-108.tar.gz
       tar xf $ROOT/u-boot.tar.gz -C $ROOT
       rm $ROOT/u-boot.tar.gz
+
+  - apt: install
+    packages:
+      - u-boot-exynos
+    tag: root
+
+  - root-fs: root
+    shell: |
       dd if=$ROOT/sd_fuse/bl1.bin.hardkernel of={{ output }} seek=1 conv=fsync,notrunc
       dd if=$ROOT/sd_fuse/bl2.bin.hardkernel.1mb_uboot of={{ output }} seek=31 conv=fsync,notrunc
-      dd if=$ROOT/sd_fuse/u-boot.bin of={{ output }} bs=512 seek=63 conv=fsync,notrunc
+
+      dd if=$ROOT/usr/lib/u-boot/odroid-xu3/u-boot.bin of={{ output }} bs=512 seek=63 conv=fsync,notrunc
+
       dd if=$ROOT/sd_fuse/tzsw.bin.hardkernel of={{ output }} seek=2111 conv=fsync,notrunc
       rm -r $ROOT/sd_fuse
 
