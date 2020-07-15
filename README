@@ -17,3 +17,11 @@ sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_r
 For Ansible use vmdb2-ansible.yaml.exemple as a starting point, create a file named vmdb2-ansible.yaml to write a playbook that will be used by vmdb2
 
 If you face any issue when running the built image, try removing the corresponding cache file *.tbz and rebuilding the image
+
+HOW-TO add a the support for a new board:
+FIXME
+Is the card supported by flash kernel ?
+If not, ..., comment the rm of /etc/flash-kernel/machine, if not kernel update wont work
+Same if flash-kernel cannot retrieve the card's name by looking in /proc/device-tree/model
+For example in case something else than U-Boot is used as bootloader
+FIXME

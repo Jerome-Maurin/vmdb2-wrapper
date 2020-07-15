@@ -127,7 +127,8 @@ steps:
     shell: |
       umount $ROOT/dev
       umount $ROOT/proc
-      rm $ROOT/etc/flash-kernel/machine
+      # With the machine file remaining in /etc/flash-kernel calls to flash-kernel (kernel updates for instance) will work despite the card not being in the supported list
+      #rm $ROOT/etc/flash-kernel/machine
       diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml || true
 
   - create-file: /etc/resolv.conf

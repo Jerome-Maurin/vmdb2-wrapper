@@ -9,3 +9,4 @@
 - Add comments in yaml files
 - Replace wget by proper apt install for armbian u-boots ?
 - Add https support ? not yet, invalid cert domain for DE mirror
+- Complete the HOW-TO add a new board in README
