@@ -31,7 +31,7 @@ jobs:
     - name: Install vmdb2
       run: |
         wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.16-2_all.deb
-        sudo dpkg -i vmdb2_0.14.1-1_all.deb
+        sudo dpkg -i vmdb2_0.16-2_all.deb
 
     - name: Build Cubietruck
       run: sudo vmdb2 cubietruck_buster_armhf_vmdb2-0.14.1.yaml --output cubietruck_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
