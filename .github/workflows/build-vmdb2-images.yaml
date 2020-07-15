@@ -151,8 +151,8 @@ jobs:
 
     - name: Install vmdb2
       run: |
-        wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.14.1-1_all.deb
-        sudo dpkg -i vmdb2_0.14.1-1_all.deb
+        wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.16-2_all.deb
+        sudo dpkg -i vmdb2_0.16-2_all.deb
 
     - name: Build Rock64
       run: sudo vmdb2 rock64_buster_arm64_vmdb2-0.14.1.yaml --output rock64_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
