@@ -31,6 +31,16 @@ sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_r
 
 ******************************
 
+To write img to sdcard, use dd.
+
+For example : 
+sudo dd bs=64k status=progress oflag=dsync if=cubietruck_buster_armhf.img of=/dev/mmcblk1
+
+In case of img from Github build you could use something like that :
+zcat cubietruck_buster_armhf.img.bz2.zip | bunzip2 -c -d | sudo dd bs=64k status=progress oflag=dsync of=/dev/mmcblk1
+
+******************************
+
 For Ansible use vmdb2-ansible.yaml.exemple as a starting point, create a file named vmdb2-ansible.yaml to write a playbook that will be used by vmdb2
 
 ******************************

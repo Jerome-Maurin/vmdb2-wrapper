@@ -6,6 +6,7 @@
 - Would be possible not to use root= in /etc/default/flash-kernel, contents of /etc/fstab in initramfs should suffice, but root= seems good practice
 - Add ssh and local user (add README explanations)
 - Fix details of mount parameters to minimize writes to SD card (no journal, etc.)
+  https://blogofterje.wordpress.com/2012/01/14/optimizing-fs-on-sd-card/
 - Add comments in yaml files
 - Replace wget by proper apt install for armbian u-boots ?
 - Add https support ? not yet, invalid cert domain for DE mirror
