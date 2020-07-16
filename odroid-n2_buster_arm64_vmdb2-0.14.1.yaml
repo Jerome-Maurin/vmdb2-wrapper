@@ -100,7 +100,7 @@ steps:
       # Adding missing ttyAML0 fixes login refusal from pam_securetty on serial UART on Odroid N2
       echo -e "\n# ODROID N2 serial console\nttyAML0" >> /etc/securetty
 
-# We use the latest travis build official Hardkernel Odroid N2 U-Boot
+# We use a recent Libretech Odroid N2 U-Boot
   - root-fs: root
     shell: |
       mkdir $ROOT/boot/u-boot
