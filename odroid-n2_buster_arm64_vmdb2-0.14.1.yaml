@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 odroid-n2-eMMC_buster_arm64_vmdb2-0.14.1.yaml --output odroid-n2-eMMC_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
+# Use like this : sudo vmdb2 odroid-n2_buster_arm64_vmdb2-0.14.1.yaml --output odroid-n2_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 steps:
   - mkimg: "{{ output }}"
     size: 3G
