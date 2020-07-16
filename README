@@ -1,22 +1,43 @@
 Simple wrapper for vmdb2, to build armhf & arm64 board images for SD-card using u-boot Debian packages, flash-kernel and Debian kernels.
 
+******************************
+
 Install right version of vmdb2 to use (see yaml file suffix).
+
+Try the bullseye version : https://packages.debian.org/bullseye/vmdb2
+
+Newer versions of vmdb2 are retro-compatible with older yaml files versions :
+  - The 0.14.1 yaml files will work with version 0.14.1+ (0.16 for example) of vmdb2.
+
+******************************
+
+Ansible is needed to run.
+
+You can always comment or remove the call to ansible roles in the yaml files if you don't want to install it.
+
+******************************
 
 Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, default):
 
 qemu-user-static binfmt-support
 
-Extra package for ansible use:
+You can always remplace qemu-debootstrap by debootstrap to build natively.
 
-ansible
+******************************
 
 vmdb2 command example (working per yaml file example command on first line comment):
 
 sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
 
+******************************
+
 For Ansible use vmdb2-ansible.yaml.exemple as a starting point, create a file named vmdb2-ansible.yaml to write a playbook that will be used by vmdb2
 
+******************************
+
 If you face any issue when running the built image, try removing the corresponding cache file *.tbz and rebuilding the image
+
+******************************
 
 HOW-TO add a the support for a new board:
 FIXME
