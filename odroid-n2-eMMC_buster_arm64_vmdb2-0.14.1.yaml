@@ -89,7 +89,7 @@ steps:
   - chroot: root
     shell: |
       sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
-
+      # Added clk_ignore_unused to the cmdline to fix boot hang on Odroid N2 (Linux 5.6 at least)
       sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g clk_ignore_unused" /etc/default/flash-kernel
       update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
       umount /dev
