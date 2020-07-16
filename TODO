@@ -1,7 +1,8 @@
 - Fix run of /usr/share/initramfs-tools/hooks/fsck when update-initramfs-ing, using /dev is wrong, it works with the host root, which triggers choice of ext4dev instead of ext4 on Github builder amongs other things. The corrct way to do things would be to replace the binary with a copy removing the first test on line 53 with a sed while runninf the script, and restoring it afterwards.
 - Fix /etc/hosts with hostname
-- Finalize support for Pine64+
+- Finalize support for Pine64+ & Pinebook
 - Finalize support for Jetsons
+- Odroid N2 & other cards with display : Work on graphic output, for U-Boot and Linux
 - For NanoPi R1, using /etc/flash-kernel path for dtb instead of kernel's ?
 - Create an ansible file per vmdb2 file
 - Generate ansible file from vmdb2 file
