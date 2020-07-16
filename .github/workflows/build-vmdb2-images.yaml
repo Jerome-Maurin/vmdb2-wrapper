@@ -183,18 +183,18 @@ jobs:
         path: nanopi-neo2_buster_arm64.img.bz2
 
     - name: Build Odroid N2
-      run: sudo vmdb2 odroid-n2-eMMC_buster_arm64_vmdb2-0.14.1.yaml --output odroid-n2-eMMC_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
+      run: sudo vmdb2 odroid-n2_buster_arm64_vmdb2-0.14.1.yaml --output odroid-n2_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv odroid-n2-eMMC_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv odroid-n2-eMMC_buster_arm64.img
+      run: loopN=$(sudo kpartx -asv odroid-n2_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv odroid-n2_buster_arm64.img
 
     - name: Compress image
-      run: sudo lbzip2 odroid-n2-eMMC_buster_arm64.img
+      run: sudo lbzip2 odroid-n2_buster_arm64.img
 
     - uses: actions/upload-artifact@v1
       with:
-        name: odroid-n2-eMMC_buster_arm64.img.bz2
-        path: odroid-n2-eMMC_buster_arm64.img.bz2
+        name: odroid-n2_buster_arm64.img.bz2
+        path: odroid-n2_buster_arm64.img.bz2
 
     - name: Build Jetson TX1
       run: sudo vmdb2 jetson-tx1_buster_arm64_vmdb2-0.14.1.yaml --output jetson-tx1_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
