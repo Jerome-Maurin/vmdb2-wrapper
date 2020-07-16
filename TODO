@@ -1,4 +1,4 @@
-- Fix run of /usr/share/initramfs-tools/hooks/fsck when update-initramfs-ing, using /dev is wrong, it works with the host root, which triggers choice of ext4dev instead of ext4 on Github builder amongs other things. The corrct way to do things would be to replace the binary with a copy removing the first test on line 53 with a sed while runninf the script, and restoring it afterwards.
+- Fix run of /usr/share/initramfs-tools/hooks/fsck when update-initramfs-ing, using /dev is wrong, it works with the host root, which triggers choice of ext4dev instead of ext4 on Github builder amongs other things. The corrct way to do things would be to replace the binary with a copy removing the first test on line 53 with a sed while runninf the script, and restoring it afterwards. But then we encounter an issue with the en device detection function : "UUID bf418d37-3cc8-4847-9440-2fe482519273 doesn't exist in /dev/disk/by-uuid\n" & "W: Couldn't identify type of root file system for fsck hook\n"
 - Fix /etc/hosts with hostname
 - Finalize support for Pine64+ & Pinebook
 - Finalize support for Jetsons
