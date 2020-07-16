@@ -79,13 +79,13 @@ steps:
 
   - chroot: root
     shell: |
-      sed -i s_errors=remount-ro_noatime,nodiratime,errors=remount-ro_g /etc/fstab
+      sed -i "s@errors=remount-ro@noatime,nodiratime,errors=remount-ro@g" /etc/fstab
 
-      sed -i "s_quiet_root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0_g" /etc/default/flash-kernel
+      sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0@g" /etc/default/flash-kernel
       update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
       umount /dev
 
-      sed -i "s_root:\*:_root::_g" /etc/shadow
+      sed -i "s@root:\*:@root::@g" /etc/shadow
 
 # We use the latest travis build official Hardkernel Odroid XU3/XU4/HC1 U-Boot assets to get the pre-U-Boot binaries (BL1,BL2,TrustZone)
 # We use the latest U-Boot binary from the Debian package u-boot-exynos
