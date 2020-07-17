@@ -36,6 +36,20 @@ jobs:
         wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.16-2_all.deb
         sudo dpkg -i vmdb2_0.16-2_all.deb
 
+    - name: Build Cubieboard2
+      run: sudo vmdb2 cubieboard2_buster_armhf_vmdb2-0.14.1.yaml --output cubieboard2_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
+
+    - name: Zero-ing obsolete data blocks
+      run: loopN=$(sudo kpartx -asv cubieboard2_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv cubieboard2_buster_armhf.img
+
+    - name: Compress image
+      run: sudo lbzip2 cubieboard2_buster_armhf.img
+
+    - uses: actions/upload-artifact@v1
+      with:
+        name: cubieboard2_buster_armhf.img.bz2
+        path: cubieboard2_buster_armhf.img.bz2
+
     - name: Build Cubietruck
       run: sudo vmdb2 cubietruck_buster_armhf_vmdb2-0.14.1.yaml --output cubietruck_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 
