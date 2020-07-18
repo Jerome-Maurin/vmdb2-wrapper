@@ -82,18 +82,26 @@ steps:
     contents: |+
       Hardkernel ODROID-N2
 
-  - root-fs: root
-    shell: |
-      mount -o bind /dev $ROOT/dev
-
   - chroot: root
     shell: |
       sed -i "s@errors=remount-ro@noatime,nodiratime,errors=remount-ro@g" /etc/fstab
 
       # Added clk_ignore_unused to the cmdline to fix boot hang on Odroid N2 (Linux 5.6 at least)
       sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0 clk_ignore_unused@g" /etc/default/flash-kernel
+
+      # Back-up fsck
+      mv /usr/share/initramfs-tools/hooks/fsck /usr/share/initramfs-tools/hooks/fsck.bak
+      chmod -x /usr/share/initramfs-tools/hooks/fsck.bak
+
+      # Fix fsck to read root fstype in fstab
+      sed "s@\[.*\"\/\".*|| @@g" /usr/share/initramfs-tools/hooks/fsck.bak > /usr/share/initramfs-tools/hooks/fsck
+      chmod +x /usr/share/initramfs-tools/hooks/fsck
+
       update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
-      umount /dev
+
+      # Restore fsck
+      mv /usr/share/initramfs-tools/hooks/fsck.bak /usr/share/initramfs-tools/hooks/fsck
+      chmod +x /usr/share/initramfs-tools/hooks/fsck
 
       sed -i "s@root:\*:@root::@g" /etc/shadow
 
