@@ -13,6 +13,9 @@ Newer versions of vmdb2 are retro-compatible with older yaml files versions :
 
 Ansible is needed to run.
 
+In some cases the needed package python3-distutils might not be installed, which can trigger an error in the ansible part.
+Make sure it is installed.
+
 You can always comment or remove the call to ansible roles in the yaml files if you don't want to install it.
 
 ******************************
