@@ -25,7 +25,7 @@ Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, 
 qemu-user-static binfmt-support
 
 You can always remplace qemu-debootstrap by debootstrap to build natively without needing qemu-user-static & binfmt-support,
-but in case you don't want to change the yaml files ans you don't min having qemu-user-static & binfmt-support on you system,
+but in case you don't want to change the yaml files and you don't mind having qemu-user-static & binfmt-support on your system,
 qemu-debootstrap will also work for native builds with almost no overhead.
 
 ******************************
