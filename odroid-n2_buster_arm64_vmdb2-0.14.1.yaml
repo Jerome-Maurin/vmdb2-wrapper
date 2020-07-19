@@ -84,6 +84,11 @@ steps:
 
   - chroot: root
     shell: |
+      # Add hostname to /etc/hosts for IPv4 & IPv6
+      HOSTNAME=$(cat /etc/hostname)
+      sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
+      sed -i "4i::2\t\t$HOSTNAME" /etc/hosts
+
       sed -i "s@errors=remount-ro@noatime,nodiratime,errors=remount-ro@g" /etc/fstab
 
       # Added clk_ignore_unused to the cmdline to fix boot hang on Odroid N2 (Linux 5.6 at least)
