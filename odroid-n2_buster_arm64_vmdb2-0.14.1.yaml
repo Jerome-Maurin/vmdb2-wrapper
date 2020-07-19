@@ -106,8 +106,8 @@ steps:
 
       sed -i "s@root:\*:@root::@g" /etc/shadow
 
-      # Adding missing ttyAML0 fixes login refusal from pam_securetty on serial UART on Odroid N2
-      echo -e "\n# ODROID N2 serial console\nttyAML0" >> /etc/securetty
+      # Adding missing ttyAML0 fixes login refusal from pam_securetty on serial UART on Odroid N2 (note the shell here is sh not bash, don't use echo -e)
+      echo "\n# ODROID N2 serial console\nttyAML0" >> /etc/securetty
 
 # We use a recent Libretech Odroid N2 U-Boot
   - root-fs: root
