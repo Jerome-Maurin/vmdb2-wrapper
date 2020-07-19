@@ -6,7 +6,7 @@ Install right version of vmdb2 to use (see yaml file suffix).
 
 Try the bullseye version : https://packages.debian.org/bullseye/vmdb2
 
-Newer versions of vmdb2 are retro-compatible with older yaml files versions :
+Versions of vmdb2 are retro-compatible with older yaml files versions :
   - The 0.14.1 yaml files will work with version 0.14.1+ (0.16 for example) of vmdb2.
 
 ******************************
@@ -24,7 +24,9 @@ Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, 
 
 qemu-user-static binfmt-support
 
-You can always remplace qemu-debootstrap by debootstrap to build natively.
+You can always remplace qemu-debootstrap by debootstrap to build natively without needing qemu-user-static & binfmt-support,
+but in case you don't want to change the yaml files ans you don't min having qemu-user-static & binfmt-support on you system,
+qemu-debootstrap will also work for native builds with almost no overhead.
 
 ******************************
 
