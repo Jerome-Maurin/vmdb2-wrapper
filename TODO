@@ -16,3 +16,4 @@
 - Replace wget by proper apt install for armbian u-boots ?
 - Add https support ? not yet, invalid cert domain for DE mirror
 - Complete the HOW-TO add a new board in README
+- Remove Odroid N2 Ethernet Ugly Fix when the device-tree id fixed from kernel.org

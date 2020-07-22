@@ -81,6 +81,32 @@ steps:
     contents: |+
       Hardkernel ODROID-N2
 
+  - create-file: /etc/flash-kernel/preboot.d/fix_ethernet_reset-gpios
+    contents: |+
+      load ${devtype} ${devnum}:${partition} ${kernel_addr_r} ${prefix}vmlinuz-${fk_kvers} \
+      && load ${devtype} ${devnum}:${partition} ${fdt_addr_r} ${prefix}${fdtpath} \
+      && fdt addr ${fdt_addr_r} \
+      && fdt rm /soc/bus@ff600000/mdio-multiplexer@4c000/mdio@0/ethernet-phy@0 reset-gpios \
+      && echo "\c" \
+      && echo "Used fdt to remove reset-gpios for Ethernet MAC mdio :\c" \
+      && echo "  Ugly fix to make ethernet work (able to up & down as pleased),\c" \
+      && echo "  goes with the /etc/network/interface fix (pre-up ip link set up)" \
+      && load ${devtype} ${devnum}:${partition} ${ramdisk_addr_r} ${prefix}initrd.img-${fk_kvers} \
+      && echo "Booting Debian ${fk_kvers} from ${devtype} ${devnum}:${partition}..." \
+      && booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr_r}
+      
+      load ${devtype} ${devnum}:${partition} ${kernel_addr_r} ${prefix}vmlinuz \
+      && load ${devtype} ${devnum}:${partition} ${fdt_addr_r} ${prefix}dtb \
+      && fdt addr ${fdt_addr_r} \
+      && fdt rm /soc/bus@ff600000/mdio-multiplexer@4c000/mdio@0/ethernet-phy@0 reset-gpios \
+      && echo "\c" \
+      && echo "Used fdt to remove reset-gpios for Ethernet MAC mdio :\c" \
+      && echo "  Ugly fix to make ethernet work (able to up & down as pleased),\c" \
+      && echo "  goes with the /etc/network/interface fix (pre-up ip link set up)" \
+      && load ${devtype} ${devnum}:${partition} ${ramdisk_addr_r} ${prefix}initrd.img \
+      && echo "Booting Debian from ${devtype} ${devnum}:${partition}..." \
+      && booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr_r}
+
   - chroot: root
     shell: |
       # Add hostname to /etc/hosts for IPv4 & IPv6
@@ -125,6 +151,9 @@ steps:
     contents: |+
       auto eth0
       iface eth0 inet dhcp
+      # Ugly fix to make ethernet work (able to up & down as pleased),
+      # goes with the flash-kernel preboot.d u-boot fix (fdt remove reset-gpios)
+        pre-up ip l s dev eth0 up || true
 
   - root-fs: root
     shell: |
