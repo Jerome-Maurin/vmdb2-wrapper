@@ -3,6 +3,7 @@
 - Expand root filesystem to fill memory size ? (rc.local)
 - Finalize support for Pine64+ & Pinebook
 - Finalize support for Jetsons
+- Finaliez support for NanoPi NEO 2 (signed u-boot)
 - Odroid N2 & other cards with display : Work on graphic output, for U-Boot and Linux
 - For NanoPi R1, using /etc/flash-kernel path for dtb instead of kernel's ?
 - Create an ansible file per vmdb2 file
