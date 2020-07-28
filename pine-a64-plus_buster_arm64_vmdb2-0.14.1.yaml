@@ -68,6 +68,10 @@ steps:
 
   - fstab: root
 
+  - chroot: root
+    shell: |
+      apt-get -y install -t buster-backports firmware-realtek
+
   - create-file: /etc/flash-kernel/machine
     contents: |+
       Pine64+
