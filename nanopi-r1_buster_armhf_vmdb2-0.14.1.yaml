@@ -70,7 +70,7 @@ steps:
 
   - root-fs: root
     shell: |
-      curl -o $ROOT/linux-dtb.deb https://apt.armbian.com/pool/main/l/linux-5.4.45-sunxi/linux-dtb-current-sunxi_20.05.3_armhf.deb
+      curl -L -o $ROOT/linux-dtb.deb https://apt.armbian.com/pool/main/l/linux-5.4.45-sunxi/linux-dtb-current-sunxi_20.05.3_armhf.deb
 
   - create-file: /etc/kernel/postinst.d/add-armbian-dtb
     contents: |+
@@ -261,7 +261,7 @@ steps:
 
   - root-fs: root
     shell: |
-      curl -o $ROOT/u-boot.deb https://apt.armbian.com/pool/main/l/linux-u-boot-nanopi-r1-current/linux-u-boot-current-nanopi-r1_20.02.1_armhf.deb
+      curl -L -o $ROOT/u-boot.deb https://apt.armbian.com/pool/main/l/linux-u-boot-nanopi-r1-current/linux-u-boot-current-nanopi-r1_20.02.1_armhf.deb
 
   - chroot: root
     shell: |

@@ -97,7 +97,7 @@ steps:
 
   - root-fs: root
     shell: |
-      curl -o $ROOT/linux-u-boot-current-nanopineo2_20.02.1_arm64.deb https://apt.armbian.com/pool/main/l/linux-u-boot-nanopineo2-current/linux-u-boot-current-nanopineo2_20.02.1_arm64.deb
+      curl -L -o $ROOT/linux-u-boot-current-nanopineo2_20.02.1_arm64.deb https://apt.armbian.com/pool/main/l/linux-u-boot-nanopineo2-current/linux-u-boot-current-nanopineo2_20.02.1_arm64.deb
 
   - chroot: root
     shell: |
