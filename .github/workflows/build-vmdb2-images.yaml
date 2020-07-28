@@ -182,6 +182,20 @@ jobs:
         name: rock64_buster_arm64.img.bz2
         path: rock64_buster_arm64.img.bz2
 
+    - name: Build Pine A64+
+      run: sudo vmdb2 pine-a64-plus_buster_arm64_vmdb2-0.14.1.yaml --output pine-a64-plus_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
+
+    - name: Zero-ing obsolete data blocks
+      run: loopN=$(sudo kpartx -asv pine-a64-plus_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv pine-a64-plus_buster_arm64.img
+
+    - name: Compress image
+      run: sudo lbzip2 pine-a64-plus_buster_arm64.img
+
+    - uses: actions/upload-artifact@v1
+      with:
+        name: pine-a64-plus_buster_arm64.img.bz2
+        path: pine-a64-plus_buster_arm64.img.bz2
+
     - name: Build NanoPi NEO 2
       run: sudo vmdb2 nanopi-neo2_buster_arm64_vmdb2-0.14.1.yaml --output nanopi-neo2_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 
