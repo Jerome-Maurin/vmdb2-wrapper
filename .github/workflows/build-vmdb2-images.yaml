@@ -40,7 +40,7 @@ jobs:
       run: sudo vmdb2 cubieboard2_buster_armhf_vmdb2-0.14.1.yaml --output cubieboard2_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv cubieboard2_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv cubieboard2_buster_armhf.img
+      run: loopN=$(sudo kpartx -asv cubieboard2_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv cubieboard2_buster_armhf.img
 
     - name: Compress image
       run: sudo lbzip2 cubieboard2_buster_armhf.img
@@ -54,7 +54,7 @@ jobs:
       run: sudo vmdb2 cubietruck_buster_armhf_vmdb2-0.14.1.yaml --output cubietruck_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv cubietruck_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv cubietruck_buster_armhf.img
+      run: loopN=$(sudo kpartx -asv cubietruck_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv cubietruck_buster_armhf.img
 
     - name: Compress image
       run: sudo lbzip2 cubietruck_buster_armhf.img
@@ -68,7 +68,7 @@ jobs:
       run: sudo vmdb2 cubietruck-plus_buster_armhf_vmdb2-0.14.1.yaml --output cubietruck-plus_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv cubietruck-plus_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv cubietruck-plus_buster_armhf.img
+      run: loopN=$(sudo kpartx -asv cubietruck-plus_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv cubietruck-plus_buster_armhf.img
 
     - name: Compress image
       run: sudo lbzip2 cubietruck-plus_buster_armhf.img
@@ -82,7 +82,7 @@ jobs:
       run: sudo vmdb2 orangepi-r1_buster_armhf_vmdb2-0.14.1.yaml --output orangepi-r1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv orangepi-r1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv orangepi-r1_buster_armhf.img
+      run: loopN=$(sudo kpartx -asv orangepi-r1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv orangepi-r1_buster_armhf.img
 
     - name: Compress image
       run: sudo lbzip2 orangepi-r1_buster_armhf.img
@@ -96,7 +96,7 @@ jobs:
       run: sudo vmdb2 nanopi-r1_buster_armhf_vmdb2-0.14.1.yaml --output nanopi-r1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv nanopi-r1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv nanopi-r1_buster_armhf.img
+      run: loopN=$(sudo kpartx -asv nanopi-r1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv nanopi-r1_buster_armhf.img
 
     - name: Compress image
       run: sudo lbzip2 nanopi-r1_buster_armhf.img
@@ -110,7 +110,7 @@ jobs:
       run: sudo vmdb2 odroid-hc1_buster_armhf_vmdb2-0.14.1.yaml --output odroid-hc1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv odroid-hc1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv odroid-hc1_buster_armhf.img
+      run: loopN=$(sudo kpartx -asv odroid-hc1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv odroid-hc1_buster_armhf.img
 
     - name: Compress image
       run: sudo lbzip2 odroid-hc1_buster_armhf.img
@@ -124,7 +124,7 @@ jobs:
       run: sudo vmdb2 udoo-quad_buster_armhf_vmdb2-0.14.1.yaml --output udoo-quad_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv udoo-quad_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv udoo-quad_buster_armhf.img
+      run: loopN=$(sudo kpartx -asv udoo-quad_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv udoo-quad_buster_armhf.img
 
     - name: Compress image
       run: sudo lbzip2 udoo-quad_buster_armhf.img
@@ -138,7 +138,7 @@ jobs:
       run: sudo vmdb2 jetson-tk1_buster_armhf_vmdb2-0.14.1.yaml --output jetson-tk1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv jetson-tk1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv jetson-tk1_buster_armhf.img
+      run: loopN=$(sudo kpartx -asv jetson-tk1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv jetson-tk1_buster_armhf.img
 
     - name: Compress image
       run: sudo lbzip2 jetson-tk1_buster_armhf.img
@@ -172,7 +172,7 @@ jobs:
       run: sudo vmdb2 rock64_buster_arm64_vmdb2-0.14.1.yaml --output rock64_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv rock64_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv rock64_buster_arm64.img
+      run: loopN=$(sudo kpartx -asv rock64_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv rock64_buster_arm64.img
 
     - name: Compress image
       run: sudo lbzip2 rock64_buster_arm64.img
@@ -186,7 +186,7 @@ jobs:
       run: sudo vmdb2 pine-a64-plus_buster_arm64_vmdb2-0.14.1.yaml --output pine-a64-plus_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv pine-a64-plus_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv pine-a64-plus_buster_arm64.img
+      run: loopN=$(sudo kpartx -asv pine-a64-plus_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv pine-a64-plus_buster_arm64.img
 
     - name: Compress image
       run: sudo lbzip2 pine-a64-plus_buster_arm64.img
@@ -200,7 +200,7 @@ jobs:
       run: sudo vmdb2 nanopi-neo2_buster_arm64_vmdb2-0.14.1.yaml --output nanopi-neo2_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv nanopi-neo2_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv nanopi-neo2_buster_arm64.img
+      run: loopN=$(sudo kpartx -asv nanopi-neo2_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv nanopi-neo2_buster_arm64.img
 
     - name: Compress image
       run: sudo lbzip2 nanopi-neo2_buster_arm64.img
@@ -214,7 +214,7 @@ jobs:
       run: sudo vmdb2 odroid-n2_buster_arm64_vmdb2-0.14.1.yaml --output odroid-n2_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv odroid-n2_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv odroid-n2_buster_arm64.img
+      run: loopN=$(sudo kpartx -asv odroid-n2_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv odroid-n2_buster_arm64.img
 
     - name: Compress image
       run: sudo lbzip2 odroid-n2_buster_arm64.img
@@ -228,7 +228,7 @@ jobs:
       run: sudo vmdb2 jetson-tx1_buster_arm64_vmdb2-0.14.1.yaml --output jetson-tx1_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
 
     - name: Zero-ing obsolete data blocks
-      run: loopN=$(sudo kpartx -asv jetson-tx1_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv jetson-tx1_buster_arm64.img
+      run: loopN=$(sudo kpartx -asv jetson-tx1_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv jetson-tx1_buster_arm64.img
 
     - name: Compress image
       run: sudo lbzip2 jetson-tx1_buster_arm64.img
@@ -262,7 +262,7 @@ jobs:
 #      run: sudo vmdb2 cubietruck-plus_bullseye_armhf_vmdb2-0.14.1.yaml --output cubietruck-plus_bullseye_armhf.img --rootfs-tarball bullseye_armhf_rootfs.tgz --log=stderr
 #
 #    - name: Zero-ing obsolete data blocks
-#      run: loopN=$(sudo kpartx -asv cubietruck-plus_bullseye_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sudo kpartx -dsv cubietruck-plus_bullseye_armhf.img
+#      run: loopN=$(sudo kpartx -asv cubietruck-plus_bullseye_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sleep 1; sudo kpartx -dsv cubietruck-plus_bullseye_armhf.img
 #
 #    - name: Compress image
 #      run: sudo lbzip2 cubietruck-plus_bullseye_armhf.img
