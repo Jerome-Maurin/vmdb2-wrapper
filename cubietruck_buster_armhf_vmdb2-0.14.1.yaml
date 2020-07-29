@@ -68,10 +68,6 @@ steps:
 
   - fstab: root
 
-  - chroot: root
-    shell: |
-      apt-get -y install -t buster-backports firmware-brcm80211
-
   - create-file: /lib/firmware/brcm/brcmfmac43362-sdio.txt
     contents: |+
       #AP6210_NVRAM_V1.2_03192013
@@ -137,7 +133,7 @@ steps:
 
   - chroot: root
     shell: |
-      apt-get -y install -t buster-backports wireless-regdb
+      apt-get -y install -t buster-backports wireless-regdb firmware-brcm80211
       apt-get -y install crda
 
       # Add hostname to /etc/hosts for IPv4 & IPv6

@@ -68,10 +68,6 @@ steps:
 
   - fstab: root
 
-  - chroot: root
-    shell: |
-      apt-get -y install -t buster-backports firmware-realtek
-
 # Pinebook not yet present in FK 3.99 (Buster), TODO : Remove when supported
   - create-file: /etc/flash-kernel/db
     contents: |+
@@ -88,6 +84,9 @@ steps:
 
   - chroot: root
     shell: |
+      apt-get -y install -t buster-backports wireless-regdb firmware-realtek
+      apt-get -y install crda
+
       # Add hostname to /etc/hosts for IPv4 & IPv6
       HOSTNAME=$(cat /etc/hostname)
       sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
