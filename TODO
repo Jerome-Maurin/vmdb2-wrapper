@@ -1,7 +1,7 @@
-- Fix /etc/hosts with hostname
+- Correctly set cpufreq governor for OdroidN2 (package cpufrequtils, /etc/default/cpufrequtils GOVERNOR="")
 - Test Cubie2, test ethernet
 - Expand root filesystem to fill memory size ? (rc.local)
-- Finalize support for Pine64+ & Pinebook
+- Finalize support for Pine64+ & Pinebook : Wifi
 - Finalize support for Jetsons
 - Finalize support for NanoPi NEO 2 (signed u-boot)
 - Add irqbalance ?
