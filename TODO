@@ -1,10 +1,15 @@
 - Correctly set cpufreq governor for OdroidN2 (package cpufrequtils, /etc/default/cpufrequtils GOVERNOR="")
 - Test Cubie2, test ethernet
-- Expand root filesystem to fill memory size ? (rc.local)
-- Finalize support for Pine64+ & Pinebook : Wifi
+- Minimize raw image size (1GB ? df +e with e < 50MB ?)
+- Expand root filesystem to fill memory size ? (rc.local) OR Display message in console (fdisk/cfdisk/sfdisk + resize2fs) ?
+- Add irqbalance ?
+- Move from ext4 to f2fs ?
+- Fix details of mount parameters to minimize writes to SD card (no journal, etc.)
+  https://blogofterje.wordpress.com/2012/01/14/optimizing-fs-on-sd-card/
+- Finalize support for Udoo Quad : Look for USB boot issue fix
+- Finalize support for Pine64+ & Pinebook : Debian U-BOOT & Look for Wi-Fi fix for Pinebook
 - Finalize support for Jetsons
 - Finalize support for NanoPi NEO 2 (signed u-boot)
-- Add irqbalance ?
 - Odroid N2 & other cards with display : Work on graphic output, for U-Boot and Linux
 - For NanoPi R1, using /etc/flash-kernel path for dtb instead of kernel's ?
 - Create an ansible file per vmdb2 file
@@ -12,8 +17,6 @@
 - Add Xen support when possible ?
 - Would be possible not to use root= in /etc/default/flash-kernel, contents of /etc/fstab in initramfs should suffice, but root= seems good practice
 - Add ssh and local user (add README explanations)
-- Fix details of mount parameters to minimize writes to SD card (no journal, etc.)
-  https://blogofterje.wordpress.com/2012/01/14/optimizing-fs-on-sd-card/
 - Add comments in yaml files
 - Replace wget by proper apt install for armbian u-boots ?
 - Add https support ? not yet, invalid cert domain for DE mirror
