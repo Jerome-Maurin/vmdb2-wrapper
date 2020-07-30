@@ -62,6 +62,33 @@ steps:
       apt-get -y install -t buster-backports linux-image-armmp
       mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
 
+# Adding hook to include imx-sdma firmware to initramfs
+  - create-file: /etc/initramfs-tools/hooks/imx-sdma-firmware
+    perm: 0755
+    contents: |+
+      #!/usr/bin/env sh
+      
+      set -e
+      
+      PREREQ=""
+      
+      prereqs()
+      {
+           echo "$PREREQ"
+      }
+      
+      case $1 in
+      prereqs)
+           prereqs
+           exit 0
+           ;;
+      esac
+      
+      . /usr/share/initramfs-tools/hook-functions
+      # Begin real processing below this line
+      
+      copy_file firmware /lib/firmware/imx/sdma/sdma-imx6q.bin
+
   - create-file: /etc/hostname
     contents: |+
       UdooQuad
@@ -74,6 +101,9 @@ steps:
 
   - chroot: root
     shell: |
+      # imx-sdma (dma engine) need sdma-imx6q.bin from package firmware-misc-nonfree
+      apt-get -y install -t buster-backports firmware-misc-nonfree
+
       # Add hostname to /etc/hosts for IPv4 & IPv6
       HOSTNAME=$(cat /etc/hostname)
       sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
@@ -81,7 +111,8 @@ steps:
 
       sed -i "s@errors=remount-ro@noatime,nodiratime,errors=remount-ro@g" /etc/fstab
 
-      sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0@g" /etc/default/flash-kernel
+      # Unresolved issue with USB, without usbcore.nousb, kernel hangs during initramfs
+      sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0 usbcore.nousb@g" /etc/default/flash-kernel
 
       # Back-up fsck
       mv /usr/share/initramfs-tools/hooks/fsck /usr/share/initramfs-tools/hooks/fsck.bak
