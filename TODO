@@ -1,4 +1,3 @@
-- Correctly set cpufreq governor for OdroidN2 (package cpufrequtils, /etc/default/cpufrequtils GOVERNOR="")
 - Test Cubie2, test ethernet
 - Minimize raw image size (1GB ? df +e with e < 50MB ?)
 - Expand root filesystem to fill memory size ? (rc.local) OR Display message in console (fdisk/cfdisk/sfdisk + resize2fs) ?

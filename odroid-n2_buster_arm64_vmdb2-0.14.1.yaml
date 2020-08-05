@@ -107,6 +107,19 @@ steps:
       && echo "Booting Debian from ${devtype} ${devnum}:${partition}..." \
       && booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr_r}
 
+  - apt: install
+    packages:
+      - cpufrequtils
+    tag: root
+
+  - create-file: /etc/default/cpufrequtils
+    contents: |+
+      # If the governor "schedutil" is selected,
+      # the cpu0 is unresponsive for about 20 seconds from time to time.
+      # By using the cpufrequtils utility we set the governor to another value.
+      # The governors "performance" & "conservative" seem stable after 1 week of tests.
+      GOVERNOR="performance"
+
   - chroot: root
     shell: |
       # Add hostname to /etc/hosts for IPv4 & IPv6
