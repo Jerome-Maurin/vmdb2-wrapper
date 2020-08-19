@@ -33,7 +33,7 @@ jobs:
 
     - name: Install vmdb2
       run: |
-        wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.16-2_all.deb
+        wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.17-1_all.deb
         sudo dpkg -i vmdb2_0.17-1_all.deb
 
     - name: Build Cubieboard2
@@ -165,7 +165,7 @@ jobs:
 
     - name: Install vmdb2
       run: |
-        wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.16-2_all.deb
+        wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.17-1_all.deb
         sudo dpkg -i vmdb2_0.17-1_all.deb
 
     - name: Build Rock64
