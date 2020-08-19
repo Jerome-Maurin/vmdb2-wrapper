@@ -9,28 +9,15 @@ steps:
   - mkpart: primary
     device: "{{ output }}"
     start: 0%
-    end: 5%
-    tag: boot
-
-  - mkpart: primary
-    device: "{{ output }}"
-    start: 5%
     end: 100%
     tag: root
 
   - kpartx: "{{ output }}"
 
-  - mkfs: ext3
-    partition: boot
-
   - mkfs: ext4
     partition: root
 
   - mount: root
-
-  - mount: boot
-    mount-on: root
-    dirname: "/boot"
 
   - unpack-rootfs: root
 
@@ -87,7 +74,7 @@ steps:
 
   - chroot: root
     shell: |
-      apt-get -y install -t buster-backports firmware-misc-nonfree firmware-realtek
+      apt-get -y install -t buster-backports firmware-misc-nonfree
 
       # Add hostname to /etc/hosts for IPv4 & IPv6
       HOSTNAME=$(cat /etc/hostname)
