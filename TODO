@@ -1,3 +1,4 @@
+- Add /etc/fw_env.config to all targets
 - Test Cubie2, test ethernet
 - Minimize raw image size (1GB ? df +e with e < 50MB ?)
 - Expand root filesystem to fill memory size ? (rc.local) OR Display message in console (fdisk/cfdisk/sfdisk + resize2fs) ?
