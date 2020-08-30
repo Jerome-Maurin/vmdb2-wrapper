@@ -100,7 +100,7 @@ steps:
 
   - root-fs: root
     shell: |
-      curl -L -o $ROOT/u-boot.deb https://apt.armbian.com/pool/main/l/linux-u-boot-pine64-current/linux-u-boot-current-pine64_20.05.2_arm64.deb
+      curl -L -o $ROOT/u-boot.deb https://apt.armbian.com/pool/main/l/linux-u-boot-pine64-current/linux-u-boot-current-pine64_20.08_arm64.deb
 
   - chroot: root
     shell: |
@@ -109,8 +109,8 @@ steps:
 
   - root-fs: root
     shell: |
-      dd if=$ROOT/usr/lib/linux-u-boot-current-pine64_20.05.2_arm64/sunxi-spl.bin of={{ output }} bs=8k seek=1 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-pine64_20.05.2_arm64/u-boot.itb of={{ output }} bs=8k seek=5 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-pine64_20.08_arm64/sunxi-spl.bin of={{ output }} bs=8k seek=1 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-pine64_20.08_arm64/u-boot.itb of={{ output }} bs=8k seek=5 conv=fsync,notrunc
 
 # TODO : move to Debian U-Boot
 #  - apt: install
