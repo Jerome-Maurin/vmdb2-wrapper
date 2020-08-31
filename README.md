@@ -1,4 +1,4 @@
-![actions build ](https://github.com/Jerome-Maurin/vmdb2-wrapper/workflows/Build%20images/badge.svg)
+[![actions build ](https://github.com/Jerome-Maurin/vmdb2-wrapper/workflows/Build%20images/badge.svg)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions)
 
 Simple wrapper for vmdb2, to build armhf & arm64 board images for SD-card using u-boot Debian packages, flash-kernel and Debian kernels.
 
