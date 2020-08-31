@@ -15,7 +15,7 @@ Versions of vmdb2 are retro-compatible with older yaml files versions :
 
 Ansible is needed to run.
 
-In some cases the needed package python3-distutils might not be installed, which can trigger an error in the ansible part.
+In some cases the needed package python3-distutils might not be installed, which can trigger an error in the ansible part.  
 Make sure it is installed.
 
 You can always comment or remove the call to ansible roles in the yaml files if you don't want to install it.
@@ -26,8 +26,8 @@ Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, 
 
 qemu-user-static binfmt-support
 
-You can always remplace qemu-debootstrap by debootstrap to build natively without needing qemu-user-static & binfmt-support,
-but in case you don't want to change the yaml files and you don't mind having qemu-user-static & binfmt-support on your system,
+You can always remplace qemu-debootstrap by debootstrap to build natively without needing qemu-user-static & binfmt-support,  
+but in case you don't want to change the yaml files and you don't mind having qemu-user-static & binfmt-support on your system,  
 qemu-debootstrap will also work for native builds with almost no overhead.
 
 ******************************
@@ -40,10 +40,10 @@ sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_r
 
 To write img to sdcard, use dd.
 
-For example : 
+For example :  
 sudo dd bs=64k status=progress oflag=dsync if=cubietruck_buster_armhf.img of=/dev/mmcblk1
 
-In case of img from Github build you could use something like that :
+In case of img from Github build you could use something like that :  
 zcat cubietruck_buster_armhf.img.bz2.zip | bunzip2 -c -d | sudo dd bs=64k status=progress oflag=dsync of=/dev/mmcblk1
 
 ******************************
@@ -56,10 +56,10 @@ If you face any issue when running the built image, try removing the correspondi
 
 ******************************
 
-HOW-TO add a the support for a new board:
-FIXME
-Is the card supported by flash kernel ?
-If not, ..., comment the rm of /etc/flash-kernel/machine, if not kernel update wont work
-Same if flash-kernel cannot retrieve the card's name by looking in /proc/device-tree/model
-For example in case something else than U-Boot is used as bootloader
+HOW-TO add a the support for a new board:  
+FIXME  
+Is the card supported by flash kernel ?  
+If not, ..., comment the rm of /etc/flash-kernel/machine, if not kernel update wont work  
+Same if flash-kernel cannot retrieve the card's name by looking in /proc/device-tree/model  
+For example in case something else than U-Boot is used as bootloader  
 FIXME
