@@ -56,7 +56,8 @@ If you face any issue when running the built image, try removing the correspondi
 
 ******************************
 
-HOW-TO add a the support for a new board:  
+HOW-TO add the support for a new board :
+
 FIXME  
 Is the card supported by flash kernel ?  
 If not, ..., comment the rm of /etc/flash-kernel/machine, if not kernel update wont work  
