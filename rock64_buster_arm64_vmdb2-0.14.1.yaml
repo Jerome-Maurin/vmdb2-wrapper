@@ -97,7 +97,7 @@ steps:
 
   - root-fs: root
     shell: |
-      curl -L -o $ROOT/u-boot.deb https://imola.armbian.com/pool/main/l/linux-u-boot-rock64-current/linux-u-boot-current-rock64_20.08.1_arm64.deb
+      curl -L -o $ROOT/u-boot.deb https://imola.armbian.com/apt/pool/main/l/linux-u-boot-rock64-current/linux-u-boot-current-rock64_20.08.1_arm64.deb
 
   - chroot: root
     shell: |
