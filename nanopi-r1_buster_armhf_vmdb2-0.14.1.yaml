@@ -70,7 +70,7 @@ steps:
 
   - root-fs: root
     shell: |
-      curl -L -o $ROOT/linux-dtb.deb https://imola.armbian.com/apt/pool/main/l/linux-5.7.15-sunxi/linux-dtb-current-sunxi_20.08.1_armhf.deb
+      curl -L -o $ROOT/linux-dtb.deb https://imola.armbian.com/apt/pool/main/l/linux-5.7.15-sunxi/linux-dtb-current-sunxi_20.08_armhf.deb
 
   - create-file: /etc/kernel/postinst.d/add-armbian-dtb
     contents: |+
