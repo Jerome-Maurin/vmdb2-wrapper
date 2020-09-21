@@ -8,7 +8,8 @@ steps:
 
   - mkpart: primary
     device: "{{ output }}"
-    start: 0%
+# We have to start higher than 12M because of the tzsw.bin.hardkernel which needs to be at 24576*512 Bytes
+    start: 16M
     end: 100%
     tag: root
 
