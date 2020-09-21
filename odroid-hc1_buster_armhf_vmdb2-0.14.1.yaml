@@ -6,9 +6,10 @@ steps:
   - mklabel: msdos
     device: "{{ output }}"
 
+# We have to start higher than 1M because of the tzsw.bin.hardkernel which needs to be at 2111*512 Bytes
   - mkpart: primary
     device: "{{ output }}"
-    start: 0%
+    start: 2M
     end: 100%
     tag: root
 
