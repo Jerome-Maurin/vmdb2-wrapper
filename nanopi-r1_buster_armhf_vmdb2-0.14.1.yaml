@@ -155,7 +155,7 @@ steps:
     shell: |
       dpkg -i linux-dtb.deb
       mkdir -p /boot/armbian-dtb
-      cp /boot/dtb-5.7.15-sunxi/sun8i-h3-nanopi-r1.dtb /boot/armbian-dtb/
+      cp /boot/dtb-5.4.66-sunxi/sun8i-h3-nanopi-r1.dtb /boot/armbian-dtb/
       dpkg -P linux-dtb-current-sunxi
       rm linux-dtb.deb
       chmod +x /etc/kernel/postinst.d/add-armbian-dtb
