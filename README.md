@@ -6,7 +6,7 @@ Simple wrapper for vmdb2, to build armhf & arm64 board images for SD-card using 
 
 On a freshly installed minimalist Debian Buster, use this command to install needed packages :
 
-apt install vmdb2 curl ansible python3-distutils qemu-user-static
+apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support
 
 Detailed explainations for each needed package is explained next.
 
@@ -36,7 +36,7 @@ You can always comment or remove the call to ansible roles in the yaml files if 
 
 Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, default):
 
-qemu-user-static (and binfmt-support which should comme as a dependency)
+qemu-user-static and binfmt-support
 
 You can always remplace qemu-debootstrap by debootstrap to build natively without needing qemu-user-static & binfmt-support,  
 but in case you don't want to change the yaml files and you don't mind having qemu-user-static & binfmt-support on your system,  
