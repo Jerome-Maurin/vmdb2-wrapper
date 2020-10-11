@@ -13,6 +13,10 @@ Versions of vmdb2 are retro-compatible with older yaml files versions :
 
 ******************************
 
+Curl is needed to fetch some binaries from the internet.
+
+******************************
+
 Ansible is needed to run.
 
 In some cases the needed package python3-distutils might not be installed, which can trigger an error in the ansible part.  
@@ -24,7 +28,7 @@ You can always comment or remove the call to ansible roles in the yaml files if 
 
 Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, default):
 
-qemu-user-static binfmt-support
+qemu-user-static (and binfmt-support which should comme as a dependency)
 
 You can always remplace qemu-debootstrap by debootstrap to build natively without needing qemu-user-static & binfmt-support,  
 but in case you don't want to change the yaml files and you don't mind having qemu-user-static & binfmt-support on your system,  
