@@ -4,6 +4,14 @@ Simple wrapper for vmdb2, to build armhf & arm64 board images for SD-card using 
 
 ******************************
 
+On a freshly installed minimalist Debian Buster, use this command to install needed packages :
+
+apt install vmdb2 curl ansible python3-distutils qemu-user-static
+
+Detailed explainations for each needed package is explained next.
+
+******************************
+
 Install right version of vmdb2 to use (see yaml file suffix).
 
 Try the bullseye version : https://packages.debian.org/bullseye/vmdb2
