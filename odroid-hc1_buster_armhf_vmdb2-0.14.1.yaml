@@ -76,7 +76,8 @@ steps:
   - chroot: root
     shell: |
       # By using rtl_nic/rtl8153a-3.fw from package firmware-realtek first available in the buster-backports package,
-      # we gain stability (cf: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=962972)
+      # we gain stability (cf: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=962972
+      # especially https://lore.kernel.org/netdev/1394712342-15778-335-Taiwan-albertk@realtek.com/)
       apt-get -y install -t buster-backports firmware-realtek
 
       # Add hostname to /etc/hosts for IPv4 & IPv6
