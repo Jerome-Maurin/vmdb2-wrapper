@@ -21,4 +21,8 @@
 - Replace use of curl by proper apt install for armbian u-boots ?
 - Add https support ? not yet, invalid cert domain for DE mirror
 - Complete the HOW-TO add a new board in README
-- Remove Odroid N2 Ethernet Ugly Fix when the device-tree is fixed by kernel.org
+- Remove Odroid N2 Ethernet Ugly Fix when the device-tree or some code is fixed by kernel.org
+  Links pertaining to this issue:
+  https://lkml.org/lkml/2019/6/10/594
+  https://lkml.org/lkml/2020/9/24/1437
+  https://armbian.atlassian.net/browse/AR-376
