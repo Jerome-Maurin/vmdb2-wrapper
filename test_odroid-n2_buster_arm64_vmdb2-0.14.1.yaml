@@ -147,11 +147,10 @@ steps:
       # Adding missing ttyAML0 fixes login refusal from pam_securetty on serial UART on Odroid N2 (note the shell here is sh not bash, don't use echo -e)
       echo "\n# ODROID N2 serial console\nttyAML0" >> /etc/securetty
 
-# We use a recent Libretech Odroid N2 U-Boot
+# We use our own Odroid N2 U-Boot built from the official tree
   - root-fs: root
     shell: |
-      dd if=u-boot.bin.sd.bin of={{ output }} bs=512 skip=1 seek=1 conv=fsync,notrunc
-      dd if=u-boot.bin.sd.bin of={{ output }} bs=1 count=444 conv=fsync,notrunc
+      dd if=u-boot.bin of={{ output }} bs=512 seek=1 conv=fsync,notrunc
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
