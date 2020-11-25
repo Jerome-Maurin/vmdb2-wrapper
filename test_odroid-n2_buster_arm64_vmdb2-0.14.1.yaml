@@ -1,0 +1,187 @@
+# Use like this : sudo vmdb2 test_odroid-n2_buster_arm64_vmdb2-0.14.1.yaml --output test_odroid-n2_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --log=stderr
+steps:
+  - mkimg: "{{ output }}"
+    size: 3G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 0%
+    end: 100%
+    tag: root
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
+
+  - mount: root
+
+  - unpack-rootfs: root
+
+  - qemu-debootstrap: buster
+    mirror: http://ftp.de.debian.org/debian
+    target: root
+    arch: arm64
+    components:
+    - main
+    - contrib
+    - non-free
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - initramfs-tools
+    tag: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      echo "deb http://ftp.de.debian.org/debian buster main contrib non-free" > /etc/apt/sources.list
+      echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian buster-updates main contrib non-free" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian buster-backports main contrib non-free" >> /etc/apt/sources.list
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - flash-kernel
+    tag: root
+    unless: rootfs_unpacked
+
+  - cache-rootfs: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      apt-get update
+      apt-get -y upgrade
+      mv /etc/kernel/postinst.d/initramfs-tools /etc/kernel/postinst.d/zz-flash-kernel /
+      apt-get -y install -t buster-backports linux-image-arm64
+      mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
+
+  - create-file: /etc/hostname
+    contents: |+
+      OdroidN2
+
+  - fstab: root
+
+  - create-file: /etc/flash-kernel/db
+    contents: |+
+      Machine: Hardkernel ODROID-N2
+      Kernel-Flavors: arm64
+      DTB-Id: amlogic/meson-g12b-odroid-n2.dtb
+      Boot-Script-Path: /boot/boot.scr
+      U-Boot-Script-Name: bootscr.uboot-generic
+      Required-Packages: u-boot-tools
+
+  - create-file: /etc/flash-kernel/machine
+    contents: |+
+      Hardkernel ODROID-N2
+
+  - create-file: /etc/flash-kernel/preboot.d/fix_ethernet_reset-gpios
+    contents: |+
+      load ${devtype} ${devnum}:${partition} ${kernel_addr_r} ${prefix}vmlinuz-${fk_kvers} \
+      && load ${devtype} ${devnum}:${partition} ${fdt_addr_r} ${prefix}${fdtpath} \
+      && fdt addr ${fdt_addr_r} \
+      && fdt rm /soc/bus@ff600000/mdio-multiplexer@4c000/mdio@0/ethernet-phy@0 reset-gpios \
+      && echo "\c" \
+      && echo "Used fdt to remove reset-gpios for Ethernet MAC mdio :\c" \
+      && echo "  Ugly fix to make ethernet work (able to up & down as pleased),\c" \
+      && echo "  goes with the /etc/network/interface fix (pre-up ip link set up)" \
+      && load ${devtype} ${devnum}:${partition} ${ramdisk_addr_r} ${prefix}initrd.img-${fk_kvers} \
+      && echo "Booting Debian ${fk_kvers} from ${devtype} ${devnum}:${partition}..." \
+      && booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr_r}
+      
+      load ${devtype} ${devnum}:${partition} ${kernel_addr_r} ${prefix}vmlinuz \
+      && load ${devtype} ${devnum}:${partition} ${fdt_addr_r} ${prefix}dtb \
+      && fdt addr ${fdt_addr_r} \
+      && fdt rm /soc/bus@ff600000/mdio-multiplexer@4c000/mdio@0/ethernet-phy@0 reset-gpios \
+      && echo "\c" \
+      && echo "Used fdt to remove reset-gpios for Ethernet MAC mdio :\c" \
+      && echo "  Ugly fix to make ethernet work (able to up & down as pleased),\c" \
+      && echo "  goes with the /etc/network/interface fix (pre-up ip link set up)" \
+      && load ${devtype} ${devnum}:${partition} ${ramdisk_addr_r} ${prefix}initrd.img \
+      && echo "Booting Debian from ${devtype} ${devnum}:${partition}..." \
+      && booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr_r}
+
+  - apt: install
+    packages:
+      - cpufrequtils
+    tag: root
+
+  - create-file: /etc/default/cpufrequtils
+    contents: |+
+      # If the governor "schedutil" is selected,
+      # the cpu0 is unresponsive for about 20 seconds from time to time.
+      # By using the cpufrequtils utility we set the governor to another value.
+      # The governors "performance" & "conservative" seem stable after 1 week of tests.
+      GOVERNOR="performance"
+
+  - chroot: root
+    shell: |
+      # Add hostname to /etc/hosts for IPv4 & IPv6
+      HOSTNAME=$(cat /etc/hostname)
+      sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
+      sed -i "4i::2\t\t$HOSTNAME" /etc/hosts
+
+      sed -i "s@errors=remount-ro@noatime,nodiratime,errors=remount-ro@g" /etc/fstab
+
+      # Added clk_ignore_unused to the cmdline to fix boot hang on Odroid N2 (Linux 5.6 at least)
+      sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0 clk_ignore_unused@g" /etc/default/flash-kernel
+
+      # Back-up fsck
+      mv /usr/share/initramfs-tools/hooks/fsck /usr/share/initramfs-tools/hooks/fsck.bak
+      chmod -x /usr/share/initramfs-tools/hooks/fsck.bak
+
+      # Fix fsck to read root fstype in fstab
+      sed "s@\[.*\"\/\".*|| @@g" /usr/share/initramfs-tools/hooks/fsck.bak > /usr/share/initramfs-tools/hooks/fsck
+      chmod +x /usr/share/initramfs-tools/hooks/fsck
+
+      update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
+
+      sed -i "s@root:\*:@root::@g" /etc/shadow
+
+      # Adding missing ttyAML0 fixes login refusal from pam_securetty on serial UART on Odroid N2 (note the shell here is sh not bash, don't use echo -e)
+      echo "\n# ODROID N2 serial console\nttyAML0" >> /etc/securetty
+
+# We use our own Odroid N2 U-Boot built from the official tree
+  - root-fs: root
+    shell: |
+      dd if=u-boot.bin of={{ output }} bs=512 seek=1 conv=fsync,notrunc
+
+  - create-file: /etc/network/interfaces.d/lo
+    contents: |+
+      auto lo
+      iface lo inet loopback
+
+  - create-file: /etc/network/interfaces.d/eth0
+    contents: |+
+      auto eth0
+      iface eth0 inet dhcp
+      # Ugly fix to make ethernet work (able to up & down as pleased),
+      # goes with the flash-kernel preboot.d u-boot fix (fdt remove reset-gpios)
+        pre-up ip l s dev eth0 up || true
+
+  - root-fs: root
+    shell: |
+      test -e vmdb2-ansible.yaml || ln -s vmdb2-ansible.yaml.example vmdb2-ansible.yaml
+      mount -t proc proc $ROOT/proc
+
+  - ansible: root
+    playbook: vmdb2-ansible.yaml
+
+  - root-fs: root
+    shell: |
+      # Restore fsck
+      mv $ROOT/usr/share/initramfs-tools/hooks/fsck.bak $ROOT/usr/share/initramfs-tools/hooks/fsck
+      chmod +x $ROOT/usr/share/initramfs-tools/hooks/fsck
+
+      umount $ROOT/proc
+      rm $ROOT/etc/flash-kernel/machine
+      diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml || true
+
+  - create-file: /etc/resolv.conf
+    contents: |
