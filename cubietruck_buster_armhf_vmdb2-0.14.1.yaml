@@ -59,7 +59,7 @@ steps:
       apt-get update
       apt-get -y upgrade
       mv /etc/kernel/postinst.d/initramfs-tools /etc/kernel/postinst.d/zz-flash-kernel /
-      apt-get -y install -t buster-backports linux-image-armmp-lpae
+      apt-get -y install -t buster linux-image-armmp-lpae
       mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
 
   - create-file: /etc/hostname
