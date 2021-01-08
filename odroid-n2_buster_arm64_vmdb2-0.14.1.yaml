@@ -86,11 +86,11 @@ steps:
       load ${devtype} ${devnum}:${partition} ${kernel_addr_r} ${prefix}vmlinuz-${fk_kvers} \
       && load ${devtype} ${devnum}:${partition} ${fdt_addr_r} ${prefix}${fdtpath} \
       && fdt addr ${fdt_addr_r} \
-      && fdt rm /soc/bus@ff600000/mdio-multiplexer@4c000/mdio@0/ethernet-phy@0 reset-gpios \
+      && fdt set /soc/bus@ff600000/mdio-multiplexer@4c000/mdio@0/ethernet-phy@0 reset-deassert-us <80000> \
       && echo "\c" \
-      && echo "Used fdt to remove reset-gpios for Ethernet MAC mdio :\c" \
-      && echo "  Ugly fix to make ethernet work (able to up & down as pleased),\c" \
-      && echo "  goes with the /etc/network/interface fix (pre-up ip link set up)" \
+      && echo "Use of fdt command to fix reset-gpios value for Ethernet MAC mdio :\c" \
+      && echo "  Clean fix to make ethernet work (able to up & down as pleased),\c" \
+      && echo "  which will be removed when the device-tree is fixed in Debian's kernel" \
       && load ${devtype} ${devnum}:${partition} ${ramdisk_addr_r} ${prefix}initrd.img-${fk_kvers} \
       && echo "Booting Debian ${fk_kvers} from ${devtype} ${devnum}:${partition}..." \
       && booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr_r}
@@ -98,11 +98,11 @@ steps:
       load ${devtype} ${devnum}:${partition} ${kernel_addr_r} ${prefix}vmlinuz \
       && load ${devtype} ${devnum}:${partition} ${fdt_addr_r} ${prefix}dtb \
       && fdt addr ${fdt_addr_r} \
-      && fdt rm /soc/bus@ff600000/mdio-multiplexer@4c000/mdio@0/ethernet-phy@0 reset-gpios \
+      && fdt set /soc/bus@ff600000/mdio-multiplexer@4c000/mdio@0/ethernet-phy@0 reset-deassert-us <80000> \
       && echo "\c" \
-      && echo "Used fdt to remove reset-gpios for Ethernet MAC mdio :\c" \
-      && echo "  Ugly fix to make ethernet work (able to up & down as pleased),\c" \
-      && echo "  goes with the /etc/network/interface fix (pre-up ip link set up)" \
+      && echo "Use of fdt command to fix reset-gpios value for Ethernet MAC mdio :\c" \
+      && echo "  Clean fix to make ethernet work (able to up & down as pleased),\c" \
+      && echo "  which will be removed when the device-tree is fixed in Debian's kernel" \
       && load ${devtype} ${devnum}:${partition} ${ramdisk_addr_r} ${prefix}initrd.img \
       && echo "Booting Debian from ${devtype} ${devnum}:${partition}..." \
       && booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr_r}

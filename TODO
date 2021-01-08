@@ -21,11 +21,11 @@
 - Replace use of curl by proper apt install for armbian u-boots ?
 - Add https support ? not yet, invalid cert domain for DE mirror
 - Complete the HOW-TO add a new board in README
-- Remove Odroid N2 Ethernet Ugly Fix when the device-tree or some code is fixed by kernel.org
+- Remove Odroid N2 Ethernet (RTL8211F) Clean Fix when the patch is applied in Debian's kernel (waiting for 5.10)
   Links pertaining to this issue:
-  https://lkml.org/lkml/2019/6/10/594
-  https://lkml.org/lkml/2020/9/24/1437
-  https://armbian.atlassian.net/browse/AR-376
-  Proper fix :
   https://lkml.org/lkml/2020/11/30/1443
   https://patchwork.kernel.org/project/linux-arm-kernel/patch/14754fd95378b78eb9a0a3f8b6bab13f7263c7f1.1606828668.git.stefan@agner.ch/
+  https://armbian.atlassian.net/browse/AR-554
+  https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=a83bf1290710b82c420f9a33808d8d69f90f0eb3
+  https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/?qt=grep&q=RTL8211F&h=linux-5.10.y
+  https://github.com/armbian/build/issues/2106#issuecomment-736138238
