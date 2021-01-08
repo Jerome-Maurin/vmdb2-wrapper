@@ -26,3 +26,6 @@
   https://lkml.org/lkml/2019/6/10/594
   https://lkml.org/lkml/2020/9/24/1437
   https://armbian.atlassian.net/browse/AR-376
+  Proper fix :
+  https://lkml.org/lkml/2020/11/30/1443
+  https://patchwork.kernel.org/project/linux-arm-kernel/patch/14754fd95378b78eb9a0a3f8b6bab13f7263c7f1.1606828668.git.stefan@agner.ch/
