@@ -22,3 +22,6 @@
 - Add https support ? not yet, invalid cert domain for DE mirror
 - Complete the HOW-TO add a new board in README
 - Remove Odroid N2 Ethernet Ugly Fix when the device-tree id fixed from kernel.org
+
+- Waiting for Debian kernel 5.10 to be able to use a modern U-Boot with video :
+  https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/?h=linux-5.10.y&qt=grep&q=HDMITX_TOP_SW_RESET
