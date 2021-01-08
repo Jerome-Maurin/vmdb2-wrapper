@@ -164,9 +164,6 @@ steps:
     contents: |+
       auto eth0
       iface eth0 inet dhcp
-      # Ugly fix to make ethernet work (able to up & down as pleased),
-      # goes with the flash-kernel preboot.d u-boot fix (fdt remove reset-gpios)
-        pre-up ip l s dev eth0 up || true
 
   - root-fs: root
     shell: |
