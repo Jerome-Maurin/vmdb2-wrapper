@@ -90,7 +90,7 @@ steps:
       && echo "\c" \
       && echo "Use of fdt command to fix reset-gpios value for Ethernet MAC mdio :\c" \
       && echo "  Clean fix to make ethernet work (able to up & down as pleased),\c" \
-      && echo "  which will be removed when the device-tree is fixed in Debian's kernel" \
+      && echo "  which will be removed when the device-tree is fixed in Debian"\'"s kernel" \
       && load ${devtype} ${devnum}:${partition} ${ramdisk_addr_r} ${prefix}initrd.img-${fk_kvers} \
       && echo "Booting Debian ${fk_kvers} from ${devtype} ${devnum}:${partition}..." \
       && booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr_r}
@@ -102,7 +102,7 @@ steps:
       && echo "\c" \
       && echo "Use of fdt command to fix reset-gpios value for Ethernet MAC mdio :\c" \
       && echo "  Clean fix to make ethernet work (able to up & down as pleased),\c" \
-      && echo "  which will be removed when the device-tree is fixed in Debian's kernel" \
+      && echo "  which will be removed when the device-tree is fixed in Debian"\'"s kernel" \
       && load ${devtype} ${devnum}:${partition} ${ramdisk_addr_r} ${prefix}initrd.img \
       && echo "Booting Debian from ${devtype} ${devnum}:${partition}..." \
       && booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr_r}
