@@ -4,7 +4,7 @@ Simple wrapper for [`vmdb2`](https://vmdb2.liw.fi/), to build armhf & arm64 boar
 
 Source code for `vmdb2` can be found on [Lars Wirzenius' Gitlab](https://gitlab.com/larswirzenius/vmdb2/) or [his own Gitano server](http://git.liw.fi/vmdb2/).
 
-If you have a Raspberry Pi, they are already supported by Debian, have a look [here](https://raspi.debian.net).<br>
+The Raspberry Pi different models are already [supported by Debian](https://raspi.debian.net).<br>
 FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-team/image-specs/)
 
 ******************************
