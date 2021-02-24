@@ -55,7 +55,7 @@ but in case you don't want to change the yaml files and you don't mind having `q
 
 ******************************
 
-To write img to sdcard, use dd.
+To write img to sdcard, use `dd`.
 
 For example :
 
