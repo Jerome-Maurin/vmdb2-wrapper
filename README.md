@@ -1,35 +1,38 @@
 [![actions build ](https://github.com/Jerome-Maurin/vmdb2-wrapper/workflows/Build%20images/badge.svg)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions)
 
-Simple wrapper for [vmdb2](https://vmdb2.liw.fi/), to build armhf & arm64 board images for SD-card using u-boot Debian packages, flash-kernel and Debian kernels.
+Simple wrapper for [`vmdb2`](https://vmdb2.liw.fi/), to build armhf & arm64 board images for SD-card using `u-boot` Debian packages, `flash-kernel` and Debian kernels. 
 
-Source code for vmdb2 can be found on [Lars Wirzenius' Gitlab](https://gitlab.com/larswirzenius/vmdb2/) or [his own Gitano server](http://git.liw.fi/vmdb2/) 
+Source code for `vmdb2` can be found on [Lars Wirzenius' Gitlab](https://gitlab.com/larswirzenius/vmdb2/) or [his own Gitano server](http://git.liw.fi/vmdb2/).
+
+If you're looking for Raspberry images, they are already supported by some Debian developpers, have a look [here](https://raspi.debian.net).<br>
+FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-team/image-specs/)
 
 ******************************
 
 On a freshly installed minimalist Debian Buster, use this command to install needed packages :
 
-apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support
+    apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support
 
 Detailed explainations for each needed package is explained next.
 
 ******************************
 
-Install right version of vmdb2 to use (see yaml file suffix).
+Install the correct version of `vmdb2` (see yaml file suffix).
 
 Try the bullseye version : https://packages.debian.org/bullseye/vmdb2
 
-Versions of vmdb2 are retro-compatible with older yaml files versions :
-  - The 0.14.1 yaml files will work with version 0.14.1+ (0.16 for example) of vmdb2.
+Versions of `vmdb2` are retro-compatible with older yaml files versions :
+  - The 0.14.1 yaml files will work with version 0.14.1+ (0.16 for example) of `vmdb2`.
 
 ******************************
 
-Curl is needed to fetch some binaries from the internet.
+`curl` is needed to fetch some binaries from the internet.
 
 ******************************
 
-Ansible is needed to run.
+`ansible` is needed to run.
 
-In some cases the needed package python3-distutils might not be installed, which can trigger an error in the ansible part.  
+In some cases the needed package `python3-distutils` might not be installed, which can trigger an error in the ansible part.<br>
 Make sure it is installed.
 
 You can always comment or remove the call to ansible roles in the yaml files if you don't want to install it.
@@ -38,15 +41,15 @@ You can always comment or remove the call to ansible roles in the yaml files if 
 
 Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, default):
 
-qemu-user-static and binfmt-support
+`qemu-user-static` and `binfmt-support`
 
-You can always remplace qemu-debootstrap by debootstrap to build natively without needing qemu-user-static & binfmt-support,  
-but in case you don't want to change the yaml files and you don't mind having qemu-user-static & binfmt-support on your system,  
-qemu-debootstrap will also work for native builds with almost no overhead.
+You can always remplace `qemu-debootstrap` by `debootstrap` to build natively without needing `qemu-user-static` & `binfmt-support`,  
+but in case you don't want to change the yaml files and you don't mind having `qemu-user-static` & `binfmt-support` on your system,  
+`qemu-debootstrap` will also work for native builds with almost no overhead.
 
 ******************************
 
-vmdb2 command example (working per yaml file example command on first line comment):
+`vmdb2` command example (working per yaml file example command on first line comment):
 
     sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
 
@@ -64,19 +67,19 @@ In case of img from Github build you could use something like that :
 
 ******************************
 
-For Ansible use vmdb2-ansible.yaml.exemple as a starting point, create a file named vmdb2-ansible.yaml to write a playbook that will be used by vmdb2
+For Ansible use `vmdb2-ansible.yaml.exemple` as a starting point, create a file named `vmdb2-ansible.yaml` to write a playbook that will be used by `vmdb2`
 
 ******************************
 
-If you face any issue when running the built image, try removing the corresponding cache file *.tbz and rebuilding the image
+If you face any issue when running the built image, try removing the corresponding cache file `RELEASE_ARCH_rootfs.tbz` and rebuilding the image
 
 ******************************
 
 HOW-TO add the support for a new board :
 
-FIXME  
-Is the card supported by flash kernel ?  
-If not, ..., comment the rm of /etc/flash-kernel/machine, if not kernel update wont work  
-Same if flash-kernel cannot retrieve the card's name by looking in /proc/device-tree/model  
-For example in case something else than U-Boot is used as bootloader  
+FIXME<br>
+Is the card supported by flash kernel ?<br>
+If not, ..., comment the rm of /etc/flash-kernel/machine, if not kernel update wont work<br>
+Same if flash-kernel cannot retrieve the card's name by looking in /proc/device-tree/model<br>
+For example in case something else than U-Boot is used as bootloader<br>
 FIXME
