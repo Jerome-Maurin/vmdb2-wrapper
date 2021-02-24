@@ -48,17 +48,19 @@ qemu-debootstrap will also work for native builds with almost no overhead.
 
 vmdb2 command example (working per yaml file example command on first line comment):
 
-sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
+    sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
 
 ******************************
 
 To write img to sdcard, use dd.
 
-For example :  
-sudo dd bs=64k status=progress oflag=dsync if=cubietruck_buster_armhf.img of=/dev/mmcblk1
+For example :
 
-In case of img from Github build you could use something like that :  
-zcat cubietruck_buster_armhf.img.bz2.zip | bunzip2 -c -d | sudo dd bs=64k status=progress oflag=dsync of=/dev/mmcblk1
+    sudo dd bs=64k status=progress oflag=dsync if=cubietruck_buster_armhf.img of=/dev/mmcblk1
+
+In case of img from Github build you could use something like that :
+
+    zcat cubietruck_buster_armhf.img.bz2.zip | bunzip2 -c -d | sudo dd bs=64k status=progress oflag=dsync of=/dev/mmcblk1
 
 ******************************
 
