@@ -11,6 +11,7 @@ The Raspberry Pi different models are already [supported by Debian](https://rasp
 FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-team/image-specs/).
 
 # Table of contents
+
 - [Supported Platforms](#supported-platforms)
 - [TL;DR Getting started](#tldr-getting-started)
 - [How to build an image](#how-to-build-an-image)
@@ -27,6 +28,7 @@ FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-t
   * [Cleanup old cache](#cleanup-old-cache)
 
 # Supported Platforms
+
 FIXME
 
 # TL;DR Getting started
@@ -41,7 +43,7 @@ You can build the image yourself using a Debian (or an Ubuntu, you'll need to ad
 
 ## Setting up the environment
 
-On a freshly installed minimalist Debian, use this command to install needed packages :
+On a freshly installed minimalist Debian, use this command to install needed packages:
 
     apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support
 
@@ -69,7 +71,7 @@ Use `head` on the file corresponding to your board and run the command present i
 
 ### Or
 
-You can run the following oneliner if you prefer :
+You can run the following oneliner if you prefer:
 
     eval $(head -n1 BOARD_RELEASE_ARCH_vmdb2-MINVERSION.yaml | sed 's/^.*: \(.*\)$/\1/g')
 
@@ -79,13 +81,13 @@ The resulting image will be called `BOARD_RELEASE_ARCH.img`
 
 To write img to sdcard, use `dd`.
 
-For example :
+For example:
 
     sudo dd bs=64k status=progress oflag=dsync if=cubietruck_buster_armhf.img of=/dev/mmcblk1
 
 Make sure `/dev/mmcblkN` is the correct SD-card (by using `lsblk` for example).
 
-In case the image comes from Github Releases or Github Actions you could use something like that :
+In case the image comes from Github Releases or Github Actions you could use something like that:
 
     zcat cubietruck_buster_armhf.img.bz2.zip | bunzip2 -c -d | sudo dd bs=64k status=progress oflag=dsync of=/dev/mmcblk1
 
@@ -104,7 +106,7 @@ Why do I need thoses packages on my system to run a image build ?
 `ansible` is needed for the build to support customizing the image with an ansible playbook.
 
 In some cases the needed package `python3-distutils` might not be installed, which can trigger an error in the ansible part.<br>
-Make sure it is installed if you.
+Make sure it is installed.
 
 You can always comment or remove the call to ansible roles in the yaml files if you don't want to install it.
 
@@ -121,11 +123,13 @@ but in case you don't want to change the yaml files and you don't mind having `q
 # FAQ
 
 ## Why must the build be run as root ?
+
 For the time being it is easier to be root for the abilities to create /dev/loops and mount/unmount them.<br>
 An alternative could be available later.
 
 ## How to add the support for a new board ?
 
+The best starting point is the `cubieboard2_buster_armhf_vmdb2-0.14.1.yaml` file which is the simplest.
 FIXME<br>
 Is the card supported by flash kernel ?<br>
 If not, ..., comment the rm of /etc/flash-kernel/machine, if not kernel update wont work<br>
