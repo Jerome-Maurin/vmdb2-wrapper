@@ -10,14 +10,17 @@ Source code for `vmdb2` can be found on [Lars Wirzenius' Gitlab](https://gitlab.
 The Raspberry Pi different models are already [supported by Debian](https://raspi.debian.net).<br>
 FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-team/image-specs/)
 
-## Getting started
+# Getting started
 
-You can either download an already built image from [the Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to [**Writing the image to an SD-card**](https://github.com/Jerome-Maurin/vmdb2-wrapper/blob/master/README.md#Writing-the-image-to-an-SD-card),
-or you can build the image yourself using a Debian (or an Ubuntu, you'll need to adapt the Debian procedure).
+You can either download an already built image from [the Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to [**Writing the image to an SD-card**](https://github.com/Jerome-Maurin/vmdb2-wrapper/blob/master/README.md#Writing-the-image-to-an-SD-card)
 
-### How to build an image
+#### Or
 
-#### Setting up the environment
+You can build the image yourself using a Debian (or an Ubuntu, you'll need to adapt the Debian procedure).
+
+## How to build an image
+
+### Setting up the environment
 
 On a freshly installed minimalist Debian, use this command to install needed packages :
 
@@ -37,7 +40,7 @@ Each Yaml file corresponds to a single board using the naming convention BOARD_R
   - MINVERSION is vmdb2's minimum required version for the Yaml file to work 
     FYI versions of `vmdb2` are retro-compatible with older yaml files versions (0.14.1 yaml files will work with version 0.14.1+)
 
-#### Building the image
+### Building the image
 
 Use `head` on the file corresponding to your board and run the command present in the comment on the first line.
 
@@ -45,7 +48,7 @@ Use `head` on the file corresponding to your board and run the command present i
 
     sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
 
-##### Or
+#### Or
 
 You can run the following oneliner if you prefer :
 
@@ -53,7 +56,7 @@ You can run the following oneliner if you prefer :
 
 The resulting image will be called `BOARD_RELEASE_ARCH.img`
 
-### Writing the image to an SD-card
+# Writing the image to an SD-card
 
 To write img to sdcard, use `dd`.
 
@@ -67,11 +70,11 @@ In case the image comes from Github Releases or Github Actions you could use som
 
     zcat cubietruck_buster_armhf.img.bz2.zip | bunzip2 -c -d | sudo dd bs=64k status=progress oflag=dsync of=/dev/mmcblk1
 
-## Customizing the image by using an Ansible-playbook
+# Customizing the image by using an Ansible-playbook
 
 For Ansible use `vmdb2-ansible.yaml.exemple` as a starting point, create a file named `vmdb2-ansible.yaml` to write an Ansible-playbook that will be used by `vmdb2`.
 
-## Needed packages 
+# Needed packages 
 
 Why do I need thoses packages on my system to run a image build ?
 
@@ -96,15 +99,19 @@ You can always remplace `qemu-debootstrap` by `debootstrap` to build natively wi
 but in case you don't want to change the yaml files and you don't mind having `qemu-user-static` & `binfmt-support` on your system,  
 `qemu-debootstrap` will also work for native builds with almost no overhead.
 
-## Potential issues with old cache
+# Potential issues with old cache
 
 If you face any issue when running the built image, try removing the corresponding cache file `RELEASE_ARCH_rootfs.tbz` and rebuilding the image.
 
-## HOW-TO add the support for a new board :
+# HOW-TO add the support for a new board :
 
 FIXME<br>
 Is the card supported by flash kernel ?<br>
 If not, ..., comment the rm of /etc/flash-kernel/machine, if not kernel update wont work<br>
 Same if flash-kernel cannot retrieve the card's name by looking in /proc/device-tree/model<br>
 For example in case something else than U-Boot is used as bootloader<br>
+FIXME
+
+# FAQ
+
 FIXME
