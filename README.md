@@ -105,11 +105,13 @@ You can always remplace `qemu-debootstrap` by `debootstrap` to build natively wi
 but in case you don't want to change the yaml files and you don't mind having `qemu-user-static` & `binfmt-support` on your system,  
 `qemu-debootstrap` will also work for native builds with almost no overhead.
 
-# Potential issues with old cache
+# FAQ
 
-If you face any issue when running the built image, try removing the corresponding cache file `RELEASE_ARCH_rootfs.tbz` and rebuilding the image.
+## Why must the build be run as root ?
+For the time being it is easier to be root for the abilities to create /dev/loops and mount/unmount them.<br>
+An alternative could be available later.
 
-# HOW-TO add the support for a new board :
+## How to add the support for a new board ?
 
 FIXME<br>
 Is the card supported by flash kernel ?<br>
@@ -118,10 +120,8 @@ Same if flash-kernel cannot retrieve the card's name by looking in /proc/device-
 For example in case something else than U-Boot is used as bootloader<br>
 FIXME
 
-# FAQ
+# Potential issues
 
-## Why must the build be run as root ?
-For the time being it is easier to be root for the abilities to create /dev/loops and mount/unmount them.<br>
-An alternative could be available later.
+## Cleanup old cache
 
-FIXME
+If you face any issue when running the built image, try removing the corresponding cache file `RELEASE_ARCH_rootfs.tbz` and rebuilding the image.
