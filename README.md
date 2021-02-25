@@ -1,39 +1,88 @@
+# VMDB2-Wrapper
+
+
 [![actions build ](https://github.com/Jerome-Maurin/vmdb2-wrapper/workflows/Build%20images/badge.svg)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions)
 
-Simple wrapper for [`vmdb2`](https://vmdb2.liw.fi/), to build armhf & arm64 board images for SD-card using `u-boot` Debian packages, `flash-kernel` and Debian kernels. 
+VMDB2-Wrapper is a simple wrapper for [`vmdb2`](https://vmdb2.liw.fi/), to build armhf & arm64 board images for SD-card using `u-boot` Debian packages, `flash-kernel` and Debian kernels. 
 
 Source code for `vmdb2` can be found on [Lars Wirzenius' Gitlab](https://gitlab.com/larswirzenius/vmdb2/) or [his own Gitano server](http://git.liw.fi/vmdb2/).
 
 The Raspberry Pi different models are already [supported by Debian](https://raspi.debian.net).<br>
 FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-team/image-specs/)
 
-******************************
+## Getting started
 
-On a freshly installed minimalist Debian Buster, use this command to install needed packages :
+You can either download an already built image from [the Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to [**Writing the image to an SD-card**](https://github.com/Jerome-Maurin/vmdb2-wrapper/blob/master/README.md#Writing-the-image-to-an-SD-card),
+or you can build the image yourself using a Debian (or an Ubuntu, you'll need to adapt the Debian procedure).
+
+### How to build an image
+
+#### Setting up the environment
+
+On a freshly installed minimalist Debian, use this command to install needed packages :
 
     apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support
 
-Detailed explainations for each needed package is explained next.
+The purpose behind each of those packages is explained in the [**Needed packages** section](https://github.com/Jerome-Maurin/vmdb2-wrapper/blob/master/README.md#Needed-packages).
 
-******************************
+At the moment, the `vmdb2` version in Debian Buster lacks a critical feature which forces the installation of Bullseye's version.
+Either add the Bullseye repository to your `sources.list` or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/vmdb2) manualy.
 
-Install the correct version of `vmdb2` (see yaml file suffix).
+### Choosing the right target
 
-Try the bullseye version : https://packages.debian.org/bullseye/vmdb2
+Each Yaml file corresponds to a single board using the naming convention BOARD_RELEASE_ARCH_vmdb2-MINVERSION.yaml where:
+  - BOARD is the board's name
+  - RELEASE is the expected Debian release
+  - ARCH is the expected architecture (armhf or arm64 for example)
+  - MINVERSION is vmdb2's minimum required version for the Yaml file to work 
+    FYI versions of `vmdb2` are retro-compatible with older yaml files versions (0.14.1 yaml files will work with version 0.14.1+)
 
-Versions of `vmdb2` are retro-compatible with older yaml files versions :
-  - The 0.14.1 yaml files will work with version 0.14.1+ (0.16 for example) of `vmdb2`.
+#### Building the image
 
-******************************
+Use `head` on the file corresponding to your board and run the command present in the comment on the first line.
+
+`vmdb2` command example:
+
+    sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
+
+##### Or
+
+You can run the following oneliner if you prefer :
+
+    eval $(head -n1 BOARD_RELEASE_ARCH_vmdb2-MINVERSION.yaml | sed 's/^.*: \(.*\)$/\1/g')
+
+The resulting image will be called `BOARD_RELEASE_ARCH.img`
+
+### Writing the image to an SD-card
+
+To write img to sdcard, use `dd`.
+
+For example :
+
+    sudo dd bs=64k status=progress oflag=dsync if=cubietruck_buster_armhf.img of=/dev/mmcblk1
+
+Make sure `/dev/mmcblkN` is the correct SD-card (by using `lsblk` for example).
+
+In case the image comes from Github Releases or Github Actions you could use something like that :
+
+    zcat cubietruck_buster_armhf.img.bz2.zip | bunzip2 -c -d | sudo dd bs=64k status=progress oflag=dsync of=/dev/mmcblk1
+
+## Customizing the image by using an Ansible-playbook
+
+For Ansible use `vmdb2-ansible.yaml.exemple` as a starting point, create a file named `vmdb2-ansible.yaml` to write an Ansible-playbook that will be used by `vmdb2`.
+
+## Needed packages 
+
+Why do I need thoses packages on my system to run a image build ?
 
 `curl` is needed to fetch some binaries from the internet.
 
 ******************************
 
-`ansible` is needed to run.
+`ansible` is needed for the build to support customizing the image with an ansible playbook.
 
 In some cases the needed package `python3-distutils` might not be installed, which can trigger an error in the ansible part.<br>
-Make sure it is installed.
+Make sure it is installed if you.
 
 You can always comment or remove the call to ansible roles in the yaml files if you don't want to install it.
 
@@ -47,35 +96,11 @@ You can always remplace `qemu-debootstrap` by `debootstrap` to build natively wi
 but in case you don't want to change the yaml files and you don't mind having `qemu-user-static` & `binfmt-support` on your system,  
 `qemu-debootstrap` will also work for native builds with almost no overhead.
 
-******************************
+## Potential issues with old cache
 
-`vmdb2` command example (working per yaml file example command on first line comment):
+If you face any issue when running the built image, try removing the corresponding cache file `RELEASE_ARCH_rootfs.tbz` and rebuilding the image.
 
-    sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
-
-******************************
-
-To write img to sdcard, use `dd`.
-
-For example :
-
-    sudo dd bs=64k status=progress oflag=dsync if=cubietruck_buster_armhf.img of=/dev/mmcblk1
-
-In case of img from Github build you could use something like that :
-
-    zcat cubietruck_buster_armhf.img.bz2.zip | bunzip2 -c -d | sudo dd bs=64k status=progress oflag=dsync of=/dev/mmcblk1
-
-******************************
-
-For Ansible use `vmdb2-ansible.yaml.exemple` as a starting point, create a file named `vmdb2-ansible.yaml` to write a playbook that will be used by `vmdb2`
-
-******************************
-
-If you face any issue when running the built image, try removing the corresponding cache file `RELEASE_ARCH_rootfs.tbz` and rebuilding the image
-
-******************************
-
-HOW-TO add the support for a new board :
+## HOW-TO add the support for a new board :
 
 FIXME<br>
 Is the card supported by flash kernel ?<br>
