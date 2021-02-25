@@ -43,9 +43,9 @@ You can build the image yourself using a Debian (or an Ubuntu, you'll need to ad
 
 ## Setting up the environment
 
-On a freshly installed minimalist Debian, use this command to install needed packages:
+On a freshly installed minimalist Debian (with sudo installed), use this command to install needed packages:
 
-    apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support
+    sudo apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support
 
 The purpose behind each of those packages is explained in the [**Needed packages**](#needed-packages) section.
 
@@ -62,6 +62,8 @@ Each Yaml file corresponds to a single board using the naming convention BOARD_R
     FYI versions of `vmdb2` are retro-compatible with older yaml files versions (0.14.1 yaml files will work with version 0.14.1+)
 
 ## Building the image
+
+For the time being `vmdb2` needs to be run as root, see [**Why must the build be run as root ?**](#why-must-the-build-be-run-as-root-) for more details.
 
 Use `head` on the file corresponding to your board and run the command present in the comment on the first line.
 
