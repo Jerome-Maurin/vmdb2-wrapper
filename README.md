@@ -26,10 +26,10 @@ On a freshly installed minimalist Debian, use this command to install needed pac
 
     apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support
 
-The purpose behind each of those packages is explained in the [**Needed packages** section](https://github.com/Jerome-Maurin/vmdb2-wrapper/blob/master/README.md#Needed-packages).
+The purpose behind each of those packages is explained in the [**Needed packages**](https://github.com/Jerome-Maurin/vmdb2-wrapper/blob/master/README.md#Needed-packages) section.
 
 At the moment, the `vmdb2` version in Debian Buster lacks a critical feature which forces the installation of Bullseye's version.
-Either add the Bullseye repository to your `sources.list` or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/vmdb2) manualy.
+Either add the Bullseye repository to your `sources.list` or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/all/vmdb2/download) manually.
 
 ### Choosing the right target
 
