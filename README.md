@@ -12,7 +12,7 @@ FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-t
 
 # Table of contents
 - [Supported Platforms](#supported-platforms)
-- [TL;DR Getting started](#tl-dr-getting-started)
+- [TL;DR Getting started](#tldr-getting-started)
 - [How to build an image](#how-to-build-an-image)
   * [Setting up the environment](#setting-up-the-environment)
   * [Choosing the right target](#choosing-the-right-target)
