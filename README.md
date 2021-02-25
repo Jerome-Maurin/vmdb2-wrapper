@@ -16,7 +16,7 @@ FIXME
 # Supported Platforms
 FIXME
 
-# Getting started
+# TL;DR Getting started
 
 You can either download an already built image from [the projetct's Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the projetct's Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to [**Writing the image to an SD-card**](https://github.com/Jerome-Maurin/vmdb2-wrapper/blob/master/README.md#Writing-the-image-to-an-SD-card)
 
