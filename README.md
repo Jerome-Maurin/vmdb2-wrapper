@@ -120,4 +120,8 @@ FIXME
 
 # FAQ
 
+## Why must the build be run as root ?
+For the time being it is easier to be root for the abilities to create /dev/loops and mount/unmount them.<br>
+An alternative could be available later.
+
 FIXME
