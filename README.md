@@ -8,7 +8,7 @@ VMDB2-Wrapper is a simple wrapper for [`vmdb2`](https://vmdb2.liw.fi/), to build
 Source code for `vmdb2` can be found on [Lars Wirzenius' Gitlab](https://gitlab.com/larswirzenius/vmdb2/) or [his own Gitano server](http://git.liw.fi/vmdb2/).
 
 The Raspberry Pi different models are already [supported by Debian](https://raspi.debian.net).<br>
-FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-team/image-specs/)
+FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-team/image-specs/).
 
 # Table of contents
 - [Supported Platforms](#supported-platforms)
@@ -31,7 +31,7 @@ FIXME
 
 # TL;DR Getting started
 
-You can either download an already built image from [the projetct's Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the projetct's Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to [**Writing the image to an SD-card**](#writing-the-image-to-an-sd-card)
+You can either download an already built image from [the projetct's Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the projetct's Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to the [**Writing the image to an SD-card**](#writing-the-image-to-an-sd-card) section.
 
 ### Or
 
