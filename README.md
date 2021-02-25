@@ -10,6 +10,12 @@ Source code for `vmdb2` can be found on [Lars Wirzenius' Gitlab](https://gitlab.
 The Raspberry Pi different models are already [supported by Debian](https://raspi.debian.net).<br>
 FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-team/image-specs/)
 
+# Table of contents
+FIXME
+
+# Supported Platforms
+FIXME
+
 # Getting started
 
 You can either download an already built image from [the projetct's Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the projetct's Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to [**Writing the image to an SD-card**](https://github.com/Jerome-Maurin/vmdb2-wrapper/blob/master/README.md#Writing-the-image-to-an-SD-card)
@@ -28,8 +34,8 @@ On a freshly installed minimalist Debian, use this command to install needed pac
 
 The purpose behind each of those packages is explained in the [**Needed packages**](https://github.com/Jerome-Maurin/vmdb2-wrapper/blob/master/README.md#Needed-packages) section.
 
-At the moment, the `vmdb2` version in Debian Buster lacks a critical feature which forces the installation of Bullseye's version.
-Either add the Bullseye repository to your `sources.list` or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/all/vmdb2/download) manually.
+At the moment, the `vmdb2` version in Debian Buster lacks a critical feature which forces the installation of Bullseye's version.<br>
+Either add the Bullseye repository to your `sources.list` (be carefull to [limit the package to vmdb2](https://wiki.debian.org/AptConfiguration#apt_preferences_.28APT_pinning.29)) or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/all/vmdb2/download) manually.
 
 ### Choosing the right target
 
@@ -44,9 +50,9 @@ Each Yaml file corresponds to a single board using the naming convention BOARD_R
 
 Use `head` on the file corresponding to your board and run the command present in the comment on the first line.
 
-`vmdb2` command example:
+`vmdb2` command generic example:
 
-    sudo vmdb2 board.yaml --output board.img --rootfs-tarball release_architecture_rootfs.tgz --log=stderr
+    sudo vmdb2 BOARD_RELEASE_ARCH_vmdb2-MINVERSION.yaml --output BOARD_RELEASE_ARCH.img --rootfs-tarball RELEASE_ARCH_rootfs.tgz --log=stderr
 
 #### Or
 
