@@ -55,11 +55,11 @@ Either add the Bullseye repository to your `sources.list` (be carefull to [limit
 ## Choosing the right target
 
 Each Yaml file corresponds to a single board using the naming convention BOARD_RELEASE_ARCH_vmdb2-MINVERSION.yaml where:
-  - BOARD is the board's name
-  - RELEASE is the expected Debian release
-  - ARCH is the expected architecture (armhf or arm64 for example)
-  - MINVERSION is vmdb2's minimum required version for the Yaml file to work 
-    FYI versions of `vmdb2` are retro-compatible with older yaml files versions (0.14.1 yaml files will work with version 0.14.1+)
+  - BOARD is the board's name.
+  - RELEASE is the expected Debian release.
+  - ARCH is the expected architecture (armhf or arm64 for example).
+  - MINVERSION is vmdb2's minimum required version for the Yaml file to work.<br>
+    FYI versions of `vmdb2` are retro-compatible with older yaml files versions (0.14.1 yaml files will work with version 0.14.1+).
 
 ## Building the image
 
@@ -118,9 +118,7 @@ Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, 
 
 `qemu-user-static` and `binfmt-support`
 
-You can always remplace `qemu-debootstrap` by `debootstrap` to build natively without needing `qemu-user-static` & `binfmt-support`,  
-but in case you don't want to change the yaml files and you don't mind having `qemu-user-static` & `binfmt-support` on your system,  
-`qemu-debootstrap` will also work for native builds with almost no overhead.
+You can always remplace `qemu-debootstrap` by `debootstrap` to build natively without needing `qemu-user-static` & `binfmt-support`, but in case you don't want to change the yaml files and you don't mind having `qemu-user-static` & `binfmt-support` on your system, `qemu-debootstrap` will also work for native builds with almost no overhead.
 
 # FAQ
 
@@ -131,7 +129,7 @@ An alternative could be available later.
 
 ## How to add the support for a new board ?
 
-The best starting point is the `cubieboard2_buster_armhf_vmdb2-0.14.1.yaml` file which is the simplest.
+The best starting point is the `cubieboard2_buster_armhf_vmdb2-0.14.1.yaml` file which is the simplest.<br>
 FIXME<br>
 Is the card supported by flash kernel ?<br>
 If not, ..., comment the rm of /etc/flash-kernel/machine, if not kernel update wont work<br>
