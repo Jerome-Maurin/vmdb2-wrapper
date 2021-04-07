@@ -1,3 +1,5 @@
+- Adapt the cmdline to handle logs correctly post 0.15
+- Update Github Action to work with port 0.15
 - Add /etc/fw_env.config to all targets
 - Test Cubie2, test ethernet
 - Minimize raw image size (1GB ? df +e with e < 50MB ?)
