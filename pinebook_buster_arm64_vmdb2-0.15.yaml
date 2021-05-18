@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 cubieboard2_buster_armhf_vmdb2-0.14.1.yaml --output cubieboard2_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
+# Use like this : sudo vmdb2 pinebook_buster_arm64_vmdb2-0.14.1.yaml --output pinebook_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt
 steps:
   - mkimg: "{{ output }}"
     size: 3G
@@ -24,7 +24,7 @@ steps:
   - qemu-debootstrap: buster
     mirror: http://ftp.de.debian.org/debian
     target: root
-    arch: armhf
+    arch: arm64
     components:
     - main
     - contrib
@@ -59,21 +59,34 @@ steps:
       apt-get update
       apt-get -y upgrade
       mv /etc/kernel/postinst.d/initramfs-tools /etc/kernel/postinst.d/zz-flash-kernel /
-      apt-get -y install -t buster-backports linux-image-armmp-lpae
+      apt-get -y install -t buster-backports linux-image-arm64
       mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
 
   - create-file: /etc/hostname
     contents: |+
-      Cubieboard2
+      Pinebook
 
   - fstab: root
 
+# Pinebook not yet present in FK 3.99 (Buster), TODO : Remove when supported
+  - create-file: /etc/flash-kernel/db
+    contents: |+
+      Machine: Pinebook
+      Kernel-Flavors: arm64
+      DTB-Id: allwinner/sun50i-a64-pinebook.dtb
+      Boot-Script-Path: /boot/boot.scr
+      U-Boot-Script-Name: bootscr.uboot-generic
+      Required-Packages: u-boot-tools
+
   - create-file: /etc/flash-kernel/machine
     contents: |+
-      Cubietech Cubieboard2
+      Pinebook
 
   - chroot: root
     shell: |
+      apt-get -y install -t buster-backports wireless-regdb firmware-realtek
+      apt-get -y install crda
+
       # Add hostname to /etc/hosts for IPv4 & IPv6
       HOSTNAME=$(cat /etc/hostname)
       sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
@@ -95,23 +108,39 @@ steps:
 
       sed -i "s@root:\*:@root::@g" /etc/shadow
 
-  - apt: install
-    packages:
-      - u-boot-sunxi
-    tag: root 
+  - root-fs: root
+    shell: |
+      curl -L -o $ROOT/u-boot.deb https://imola.armbian.com/apt/pool/main/l/linux-u-boot-pinebook-a64-current/linux-u-boot-current-pinebook-a64_20.08.1_arm64.deb
+
+  - chroot: root
+    shell: |
+      dpkg -i u-boot.deb
+      rm u-boot.deb
 
   - root-fs: root
     shell: |
-      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/Cubieboard2/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
+      dd if=$ROOT/usr/lib/linux-u-boot-current-pinebook-a64_20.08.1_arm64/sunxi-spl.bin of={{ output }} bs=8k seek=1 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-pinebook-a64_20.08.1_arm64/u-boot.itb of={{ output }} bs=8k seek=5 conv=fsync,notrunc
+
+# TODO : move to Debian U-Boot
+#  - apt: install
+#    packages:
+#      - u-boot-sunxi
+#    tag: root
+
+#  - root-fs: root
+#    shell: |
+#      dd if=$ROOT/usr/lib/u-boot/pine64_plus/u-boot.bin of={{ output }} seek=64 conv=fsync,notrunc
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
       auto lo
       iface lo inet loopback
 
+# No integrated Ethernet on Pinebook
   - create-file: /etc/network/interfaces.d/eth0
     contents: |+
-      auto eth0
+      allow-hotplug eth0
       iface eth0 inet dhcp
 
   - root-fs: root

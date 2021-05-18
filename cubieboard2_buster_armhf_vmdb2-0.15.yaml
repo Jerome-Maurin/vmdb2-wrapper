@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 cubietruck-plus_buster_armhf_vmdb2-0.14.1.yaml --output cubietruck-plus_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --log=stderr
+# Use like this : sudo vmdb2 cubieboard2_buster_armhf_vmdb2-0.14.1.yaml --output cubieboard2_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt
 steps:
   - mkimg: "{{ output }}"
     size: 3G
@@ -64,13 +64,13 @@ steps:
 
   - create-file: /etc/hostname
     contents: |+
-      CubietruckPlus
+      Cubieboard2
 
   - fstab: root
 
   - create-file: /etc/flash-kernel/machine
     contents: |+
-      Cubietech Cubietruck Plus
+      Cubietech Cubieboard2
 
   - chroot: root
     shell: |
@@ -102,7 +102,7 @@ steps:
 
   - root-fs: root
     shell: |
-      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/Cubietruck_plus/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
+      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/Cubieboard2/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
