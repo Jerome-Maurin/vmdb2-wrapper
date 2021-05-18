@@ -161,7 +161,7 @@ jobs:
     - name: Install needed packagest
       run: |
         sudo apt-get update
-        sudo apt-get install python3-cliapp cmdtest debootstrap qemu-utils kpartx qemu-user-static binfmt-support zerofree lbzip2
+        sudo apt-get install python3-cliapp cmdtest debootstrap qemu-utils kpartx qemu-user-static binfmt-support zerofree lbzip2 ansible
 
     - name: Install vmdb2
       run: |
