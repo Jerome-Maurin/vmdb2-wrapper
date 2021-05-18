@@ -37,7 +37,7 @@ jobs:
         sudo dpkg -i vmdb2_0.22-1_all.deb
 
     - name: Build Cubieboard2
-      run: sudo vmdb2 cubieboard2_buster_armhf_vmdb2-0.14.1.yaml --output cubieboard2_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 cubieboard2_buster_armhf_vmdb2-0.15.yaml --output cubieboard2_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv cubieboard2_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv cubieboard2_buster_armhf.img
@@ -51,7 +51,7 @@ jobs:
         path: cubieboard2_buster_armhf.img.bz2
 
     - name: Build Cubietruck
-      run: sudo vmdb2 cubietruck_buster_armhf_vmdb2-0.14.1.yaml --output cubietruck_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 cubietruck_buster_armhf_vmdb2-0.15.yaml --output cubietruck_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv cubietruck_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv cubietruck_buster_armhf.img
@@ -65,7 +65,7 @@ jobs:
         path: cubietruck_buster_armhf.img.bz2
 
     - name: Build Cubietruck Plus
-      run: sudo vmdb2 cubietruck-plus_buster_armhf_vmdb2-0.14.1.yaml --output cubietruck-plus_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 cubietruck-plus_buster_armhf_vmdb2-0.15.yaml --output cubietruck-plus_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv cubietruck-plus_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv cubietruck-plus_buster_armhf.img
@@ -79,7 +79,7 @@ jobs:
         path: cubietruck-plus_buster_armhf.img.bz2
 
     - name: Build OrangePi R1
-      run: sudo vmdb2 orangepi-r1_buster_armhf_vmdb2-0.14.1.yaml --output orangepi-r1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 orangepi-r1_buster_armhf_vmdb2-0.15.yaml --output orangepi-r1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv orangepi-r1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv orangepi-r1_buster_armhf.img
@@ -93,7 +93,7 @@ jobs:
         path: orangepi-r1_buster_armhf.img.bz2
 
     - name: Build NanoPi R1
-      run: sudo vmdb2 nanopi-r1_buster_armhf_vmdb2-0.14.1.yaml --output nanopi-r1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 nanopi-r1_buster_armhf_vmdb2-0.15.yaml --output nanopi-r1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv nanopi-r1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv nanopi-r1_buster_armhf.img
@@ -107,7 +107,7 @@ jobs:
         path: nanopi-r1_buster_armhf.img.bz2
 
     - name: Build Odroid HC1
-      run: sudo vmdb2 odroid-hc1_buster_armhf_vmdb2-0.14.1.yaml --output odroid-hc1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 odroid-hc1_buster_armhf_vmdb2-0.15.yaml --output odroid-hc1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv odroid-hc1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv odroid-hc1_buster_armhf.img
@@ -121,7 +121,7 @@ jobs:
         path: odroid-hc1_buster_armhf.img.bz2
 
     - name: Build Udoo Quad
-      run: sudo vmdb2 udoo-quad_buster_armhf_vmdb2-0.14.1.yaml --output udoo-quad_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 udoo-quad_buster_armhf_vmdb2-0.15.yaml --output udoo-quad_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv udoo-quad_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv udoo-quad_buster_armhf.img
@@ -135,7 +135,7 @@ jobs:
         path: udoo-quad_buster_armhf.img.bz2
 
     - name: Build Jetson TK1
-      run: sudo vmdb2 jetson-tk1_buster_armhf_vmdb2-0.14.1.yaml --output jetson-tk1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 jetson-tk1_buster_armhf_vmdb2-0.15.yaml --output jetson-tk1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv jetson-tk1_buster_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv jetson-tk1_buster_armhf.img
@@ -169,7 +169,7 @@ jobs:
         sudo dpkg -i vmdb2_0.22-1_all.deb
 
     - name: Build Rock64
-      run: sudo vmdb2 rock64_buster_arm64_vmdb2-0.14.1.yaml --output rock64_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 rock64_buster_arm64_vmdb2-0.15.yaml --output rock64_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv rock64_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv rock64_buster_arm64.img
@@ -183,7 +183,7 @@ jobs:
         path: rock64_buster_arm64.img.bz2
 
     - name: Build Pine A64+
-      run: sudo vmdb2 pine-a64-plus_buster_arm64_vmdb2-0.14.1.yaml --output pine-a64-plus_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 pine-a64-plus_buster_arm64_vmdb2-0.15.yaml --output pine-a64-plus_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv pine-a64-plus_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv pine-a64-plus_buster_arm64.img
@@ -197,7 +197,7 @@ jobs:
         path: pine-a64-plus_buster_arm64.img.bz2
 
     - name: Build Pinebook
-      run: sudo vmdb2 pinebook_buster_arm64_vmdb2-0.14.1.yaml --output pinebook_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 pinebook_buster_arm64_vmdb2-0.15.yaml --output pinebook_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv pinebook_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv pinebook_buster_arm64.img
@@ -211,7 +211,7 @@ jobs:
         path: pinebook_buster_arm64.img.bz2
 
     - name: Build NanoPi NEO 2
-      run: sudo vmdb2 nanopi-neo2_buster_arm64_vmdb2-0.14.1.yaml --output nanopi-neo2_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 nanopi-neo2_buster_arm64_vmdb2-0.15.yaml --output nanopi-neo2_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv nanopi-neo2_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv nanopi-neo2_buster_arm64.img
@@ -225,7 +225,7 @@ jobs:
         path: nanopi-neo2_buster_arm64.img.bz2
 
     - name: Build Odroid N2
-      run: sudo vmdb2 odroid-n2_buster_arm64_vmdb2-0.14.1.yaml --output odroid-n2_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 odroid-n2_buster_arm64_vmdb2-0.15.yaml --output odroid-n2_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv odroid-n2_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv odroid-n2_buster_arm64.img
@@ -239,7 +239,7 @@ jobs:
         path: odroid-n2_buster_arm64.img.bz2
 
     - name: Build Jetson TX1
-      run: sudo vmdb2 jetson-tx1_buster_arm64_vmdb2-0.14.1.yaml --output jetson-tx1_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
+      run: sudo vmdb2 jetson-tx1_buster_arm64_vmdb2-0.15.yaml --output jetson-tx1_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
     - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv jetson-tx1_buster_arm64.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv jetson-tx1_buster_arm64.img
@@ -269,11 +269,11 @@ jobs:
 #
 #    - name: Install vmdb2
 #      run: |
-#        wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.14.1-1_all.deb
-#        sudo dpkg -i vmdb2_0.14.1-1_all.deb
+#        wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.22-1_all.deb
+#        sudo dpkg -i vmdb2_0.15-1_all.deb
 #
 #    - name: Build Cubietruck Plus
-#      run: sudo vmdb2 cubietruck-plus_bullseye_armhf_vmdb2-0.14.1.yaml --output cubietruck-plus_bullseye_armhf.img --rootfs-tarball bullseye_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
+#      run: sudo vmdb2 cubietruck-plus_bullseye_armhf_vmdb2-0.15.yaml --output cubietruck-plus_bullseye_armhf.img --rootfs-tarball bullseye_armhf_rootfs.tgz --verbose --log=log.txt; cat log.txt
 #
 #    - name: Zero-ing obsolete data blocks
 #      run: loopN=$(sudo kpartx -asv cubietruck-plus_bullseye_armhf.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv cubietruck-plus_bullseye_armhf.img
