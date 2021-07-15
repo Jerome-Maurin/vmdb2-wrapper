@@ -106,7 +106,7 @@ steps:
 
   - root-fs: root
     shell: |
-      curl -L -o $ROOT/u-boot.deb https://imola.armbian.com/apt/pool/main/l/linux-u-boot-orangepi-r1-current/linux-u-boot-current-orangepi-r1_20.08.1_armhf.deb
+      curl -L -o $ROOT/u-boot.deb https://imola.armbian.com/apt/pool/main/l/linux-u-boot-orangepi-r1-current/linux-u-boot-current-orangepi-r1_21.05.1_armhf.deb
 
   - chroot: root
     shell: |
@@ -115,7 +115,7 @@ steps:
 
   - root-fs: root
     shell: |
-      dd conv=fsync,notrunc if=$ROOT/usr/lib/linux-u-boot-current-orangepi-r1_20.08.1_armhf/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
+      dd conv=fsync,notrunc if=$ROOT/usr/lib/linux-u-boot-current-orangepi-r1_21.05.1_armhf/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+

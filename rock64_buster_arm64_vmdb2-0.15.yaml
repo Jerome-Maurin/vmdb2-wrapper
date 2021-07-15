@@ -98,7 +98,7 @@ steps:
 
   - root-fs: root
     shell: |
-      curl -L -o $ROOT/u-boot.deb https://imola.armbian.com/apt/pool/main/l/linux-u-boot-rock64-current/linux-u-boot-current-rock64_20.08.1_arm64.deb
+      curl -L -o $ROOT/u-boot.deb https://imola.armbian.com/apt/pool/main/l/linux-u-boot-rock64-current/linux-u-boot-current-rock64_21.05.1_arm64.deb
 
   - chroot: root
     shell: |
@@ -107,9 +107,9 @@ steps:
 
   - root-fs: root
     shell: |
-      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_20.08.1_arm64/idbloader.bin of={{ output }} seek=64 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_20.08.1_arm64/uboot.img of={{ output }} seek=16384 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_20.08.1_arm64/trust.bin of={{ output }} seek=24576 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_21.05.1_arm64/idbloader.bin of={{ output }} seek=64 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_21.05.1_arm64/uboot.img of={{ output }} seek=16384 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_21.05.1_arm64/trust.bin of={{ output }} seek=24576 conv=fsync,notrunc
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
