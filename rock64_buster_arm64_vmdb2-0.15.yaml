@@ -108,7 +108,7 @@ steps:
   - root-fs: root
     shell: |
       dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_21.05.1_arm64/idbloader.img of={{ output }} seek=64 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_21.05.1_arm64/uboot.itb of={{ output }} seek=16384 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_21.05.1_arm64/u-boot.itb of={{ output }} seek=16384 conv=fsync,notrunc
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
