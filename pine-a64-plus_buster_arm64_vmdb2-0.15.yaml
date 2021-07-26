@@ -109,8 +109,7 @@ steps:
 
   - root-fs: root
     shell: |
-      dd if=$ROOT/usr/lib/linux-u-boot-current-pine64_21.05.1_arm64/sunxi-spl.bin of={{ output }} bs=8k seek=1 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-pine64_21.05.1_arm64/u-boot.itb of={{ output }} bs=8k seek=5 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-pine64_21.05.1_arm64/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8 conv=fsync,notrunc
 
 # TODO : move to Debian U-Boot
 #  - apt: install
