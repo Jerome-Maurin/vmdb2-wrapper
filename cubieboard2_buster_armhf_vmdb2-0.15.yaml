@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 cubieboard2_buster_armhf_vmdb2-0.14.1.yaml --output cubieboard2_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt
+# Use like this : sudo vmdb2 cubieboard2_buster_armhf_vmdb2-0.15.yaml --output cubieboard2_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt
 steps:
   - mkimg: "{{ output }}"
     size: 3G
