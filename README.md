@@ -22,8 +22,8 @@ FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-t
 - [Customizing the image by using an Ansible-playbook](#customizing-the-image-by-using-an-ansible-playbook)
 - [Needed packages](#needed-packages)
 - [FAQ](#faq)
-  * [Why must the build be run as root ?](#why-must-the-build-be-run-as-root--)
-  * [How to add the support for a new board ?](#how-to-add-the-support-for-a-new-board--)
+  * [Why must the build be run as root ?](#why-must-the-build-be-run-as-root-)
+  * [How to add the support for a new board ?](#how-to-add-the-support-for-a-new-board-)
 - [Potential issues](#potential-issues)
   * [Cleanup old cache](#cleanup-old-cache)
 
