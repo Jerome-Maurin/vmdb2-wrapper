@@ -50,7 +50,11 @@ On a freshly installed minimalist Debian (with sudo installed), use this command
 The purpose behind each of those packages is explained in the [**Needed packages**](#needed-packages) section.
 
 At the moment, the `vmdb2` version in Debian Buster lacks a critical feature which forces the installation of Bullseye's version.<br>
-Either add the Bullseye repository to your `sources.list` (be carefull to [limit the package to vmdb2](https://wiki.debian.org/AptConfiguration#apt_preferences_.28APT_pinning.29)) or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/all/vmdb2/download) manually.
+Either add the Bullseye repository to your `sources.list` (be carefull to [limit the package to vmdb2](https://wiki.debian.org/AptConfiguration#apt_preferences_.28APT_pinning.29)) or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/all/vmdb2/download) manually.<br>
+For example (manual install):
+
+    wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.22-1_all.deb
+    sudo dpkg -i vmdb2_0.22-1_all.deb
 
 ## Choosing the right target
 
