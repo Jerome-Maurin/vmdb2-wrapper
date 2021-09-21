@@ -33,7 +33,7 @@ FIXME
 
 # TL;DR Getting started
 
-You can either download an already built image from [the projetct's Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the projetct's Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to the [**Writing the image to an SD-card**](#writing-the-image-to-an-sd-card) section.
+You can either download an already built image from [the projetct's Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the project's Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to the [**Writing the image to an SD-card**](#writing-the-image-to-an-sd-card) section.
 
 ### Or
 
