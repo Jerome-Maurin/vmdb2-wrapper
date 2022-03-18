@@ -8,7 +8,7 @@ steps:
 
   - mkpart: primary
     device: "{{ output }}"
-    start: 0%
+    start: 16M
     end: 100%
     tag: root
 
