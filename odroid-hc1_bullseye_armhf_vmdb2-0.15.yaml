@@ -1,0 +1,157 @@
+# Use like this : sudo vmdb2 odroid-hc1_bullseye_armhf_vmdb2-0.15.yaml --output odroid-hc1_bullseye_armhf.img --rootfs-tarball bullseye_armhf_rootfs.tgz --verbose --log=log.txt
+steps:
+  - mkimg: "{{ output }}"
+    size: 3G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+# We have to start higher than 1M because of the tzsw.bin.hardkernel which needs to be at 2111*512 Bytes
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 2M
+    end: 100%
+    tag: root
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
+
+  - mount: root
+
+  - unpack-rootfs: root
+
+  - qemu-debootstrap: bullseye
+    mirror: https://deb.debian.org/debian
+    target: root
+    arch: armhf
+    components:
+    - main
+    - contrib
+    - non-free
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - initramfs-tools
+    tag: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      echo "deb https://deb.debian.org/debian bullseye main contrib non-free" > /etc/apt/sources.list
+      echo "deb https://security.debian.org bullseye-security main contrib non-free" >> /etc/apt/sources.list
+      echo "deb https://deb.debian.org/debian bullseye-updates main contrib non-free" >> /etc/apt/sources.list
+      echo "deb https://deb.debian.org/debian bullseye-backports main contrib non-free" >> /etc/apt/sources.list
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - flash-kernel
+    tag: root
+    unless: rootfs_unpacked
+
+  - cache-rootfs: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      apt-get update
+      apt-get -y upgrade
+      mv /etc/kernel/postinst.d/initramfs-tools /etc/kernel/postinst.d/zz-flash-kernel /
+      apt-get -y install -t bullseye-backports linux-image-armmp-lpae
+      mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
+
+  - create-file: /etc/hostname
+    contents: |+
+      OdroidHC1
+
+  - fstab: root
+
+  - create-file: /etc/flash-kernel/machine
+    contents: |+
+      Hardkernel Odroid HC1
+
+  - chroot: root
+    shell: |
+      # By using rtl_nic/rtl8153a-3.fw from package firmware-realtek first available in the bullseye-backports package,
+      # we gain stability (cf: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=962972
+      # especially https://lore.kernel.org/netdev/1394712342-15778-335-Taiwan-albertk@realtek.com/)
+      apt-get -y install -t bullseye-backports firmware-realtek
+
+      # Add hostname to /etc/hosts for IPv4 & IPv6
+      HOSTNAME=$(cat /etc/hostname)
+      sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
+      sed -i "4i::2\t\t$HOSTNAME" /etc/hosts
+
+      sed -i "s@errors=remount-ro@noatime,nodiratime,errors=remount-ro@g" /etc/fstab
+
+      sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0@g" /etc/default/flash-kernel
+
+      # Back-up fsck
+      mv /usr/share/initramfs-tools/hooks/fsck /usr/share/initramfs-tools/hooks/fsck.bak
+      chmod -x /usr/share/initramfs-tools/hooks/fsck.bak
+
+      # Fix fsck to read root fstype in fstab
+      sed "s@\[.*\"\/\".*|| @@g" /usr/share/initramfs-tools/hooks/fsck.bak > /usr/share/initramfs-tools/hooks/fsck
+      chmod +x /usr/share/initramfs-tools/hooks/fsck
+
+      update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
+
+      sed -i "s@root:\*:@root::@g" /etc/shadow
+
+# We use the latest travis build official Hardkernel Odroid XU3/XU4/HC1 U-Boot assets to get the pre-U-Boot binaries (BL1,BL2,TrustZone)
+# We use the latest U-Boot binary from the Debian package u-boot-exynos
+  - root-fs: root
+    shell: |
+      curl -L -o $ROOT/u-boot.tar.gz https://github.com/hardkernel/u-boot/releases/download/travis%2Fodroidxu3-108/u-boot-odroidxu3-108.tar.gz
+      tar xf $ROOT/u-boot.tar.gz -C $ROOT
+      rm $ROOT/u-boot.tar.gz
+
+  - apt: install
+    packages:
+      - u-boot-exynos
+    tag: root
+
+  - root-fs: root
+    shell: |
+      dd if=$ROOT/sd_fuse/bl1.bin.hardkernel of={{ output }} seek=1 conv=fsync,notrunc
+      dd if=$ROOT/sd_fuse/bl2.bin.hardkernel.1mb_uboot of={{ output }} seek=31 conv=fsync,notrunc
+
+      dd if=$ROOT/usr/lib/u-boot/odroid-xu3/u-boot.bin of={{ output }} bs=512 seek=63 conv=fsync,notrunc
+
+      dd if=$ROOT/sd_fuse/tzsw.bin.hardkernel of={{ output }} seek=2111 conv=fsync,notrunc
+      rm -r $ROOT/sd_fuse
+
+  - create-file: /etc/network/interfaces.d/lo
+    contents: |+
+      auto lo
+      iface lo inet loopback
+
+  - create-file: /etc/network/interfaces.d/eth0
+    contents: |+
+      # Use allow-hotplug because on the Odroid HC1 eth0 is connected through usb which can take some time to be detected
+      allow-hotplug eth0
+      iface eth0 inet dhcp
+
+  - root-fs: root
+    shell: |
+      test -e vmdb2-ansible.yaml || ln -s vmdb2-ansible.yaml.example vmdb2-ansible.yaml
+      mount -t proc proc $ROOT/proc
+
+  - ansible: root
+    playbook: vmdb2-ansible.yaml
+
+  - root-fs: root
+    shell: |
+      # Restore fsck
+      mv $ROOT/usr/share/initramfs-tools/hooks/fsck.bak $ROOT/usr/share/initramfs-tools/hooks/fsck
+      chmod +x $ROOT/usr/share/initramfs-tools/hooks/fsck
+
+      umount $ROOT/proc
+      rm $ROOT/etc/flash-kernel/machine
+      diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml || true
+
+  - create-file: /etc/resolv.conf
+    contents: |
