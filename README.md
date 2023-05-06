@@ -3,7 +3,7 @@
 
 [![actions build ](https://github.com/Jerome-Maurin/vmdb2-wrapper/workflows/Build%20images/badge.svg)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions)
 
-VMDB2-Wrapper is a simple wrapper for [`vmdb2`](https://vmdb2.liw.fi/), to build armhf & arm64 board images for SD-card using `u-boot` Debian packages, `flash-kernel` and Debian kernels. 
+VMDB2-Wrapper is a simple wrapper for [`vmdb2`](https://vmdb2.liw.fi/), to build armhf & arm64 board images for SD-card using `u-boot` Debian packages, `flash-kernel` and Debian kernels.
 
 Source code for `vmdb2` can be found on [Lars Wirzenius' Gitlab](https://gitlab.com/larswirzenius/vmdb2/) or [his own Gitano server](http://git.liw.fi/vmdb2/).
 
@@ -22,8 +22,8 @@ FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-t
 - [Customizing the image by using an Ansible-playbook](#customizing-the-image-by-using-an-ansible-playbook)
 - [Needed packages](#needed-packages)
 - [FAQ](#faq)
-  * [Why must the build be run as root ?](#why-must-the-build-be-run-as-root-)
-  * [How to add the support for a new board ?](#how-to-add-the-support-for-a-new-board-)
+  * [Why must the build be run as root?](#why-must-the-build-be-run-as-root-)
+  * [How to add the support for a new board?](#how-to-add-the-support-for-a-new-board-)
 - [Potential issues](#potential-issues)
   * [Cleanup old cache](#cleanup-old-cache)
 
@@ -33,7 +33,7 @@ FIXME
 
 # TL;DR Getting started
 
-You can either download an already built image from [the projetct's Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the project's Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to the [**Writing the image to an SD-card**](#writing-the-image-to-an-sd-card) section.
+You can either download an already built image from [the project's Github Releases](https://github.com/Jerome-Maurin/vmdb2-wrapper/releases) or [the project's Github Actions (nigthly builds)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions) (needs to be logged-in) and then skip to the [**Writing the image to an SD-card**](#writing-the-image-to-an-sd-card) section.
 
 ### Or
 
@@ -50,7 +50,7 @@ On a freshly installed minimalist Debian (with sudo installed), use this command
 The purpose behind each of those packages is explained in the [**Needed packages**](#needed-packages) section.
 
 At the moment, the `vmdb2` version in Debian Buster lacks a critical feature which forces the installation of Bullseye's version.<br>
-Either add the Bullseye repository to your `sources.list` (be carefull to [limit the package to vmdb2](https://wiki.debian.org/AptConfiguration#apt_preferences_.28APT_pinning.29)) or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/all/vmdb2/download) manually.<br>
+Either add the Bullseye repository to your `sources.list` (be careful to [limit the package to vmdb2](https://wiki.debian.org/AptConfiguration#apt_preferences_.28APT_pinning.29)) or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/all/vmdb2/download) manually.<br>
 For example (manual install):
 
     wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.22-1_all.deb
@@ -67,7 +67,7 @@ Each Yaml file corresponds to a single board using the naming convention BOARD_R
 
 ## Building the image
 
-For the time being `vmdb2` needs to be run as root, see [**Why must the build be run as root ?**](#why-must-the-build-be-run-as-root-) for more details.
+For the time being `vmdb2` needs to be run as root, see [**Why must the build be run as root?**](#why-must-the-build-be-run-as-root-) for more details.
 
 Use `head` on the file corresponding to your board and run the command present in the comment on the first line.
 
@@ -85,7 +85,7 @@ The resulting image will be called `BOARD_RELEASE_ARCH.img`
 
 # Writing the image to an SD-card
 
-To write img to sdcard, use `dd`.
+To write the `.img` file to an sdcard, use `dd`.
 
 For example:
 
@@ -101,9 +101,9 @@ In case the image comes from Github Releases or Github Actions you could use som
 
 For Ansible use `vmdb2-ansible.yaml.exemple` as a starting point, create a file named `vmdb2-ansible.yaml` to write an Ansible-playbook that will be used by `vmdb2`.
 
-# Needed packages 
+# Needed packages
 
-Why do I need thoses packages on my system to run a image build ?
+Why do I need those packages on my system to run a image build?
 
 `curl` is needed to fetch some binaries from the internet.
 
@@ -122,20 +122,20 @@ Extra packages needed for cross-compile build (use of qemu-debootstrap in yaml, 
 
 `qemu-user-static` and `binfmt-support`
 
-You can always remplace `qemu-debootstrap` by `debootstrap` to build natively without needing `qemu-user-static` & `binfmt-support`, but in case you don't want to change the yaml files and you don't mind having `qemu-user-static` & `binfmt-support` on your system, `qemu-debootstrap` will also work for native builds with almost no overhead.
+You can always replace `qemu-debootstrap` by `debootstrap` to build natively without needing `qemu-user-static` & `binfmt-support`, but in case you don't want to change the yaml files and you don't mind having `qemu-user-static` & `binfmt-support` on your system, `qemu-debootstrap` will also work for native builds with almost no overhead.
 
 # FAQ
 
-## Why must the build be run as root ?
+## Why must the build be run as root?
 
 For the time being it is easier to be root for the abilities to create /dev/loops and mount/unmount them.<br>
 An alternative could be available later.
 
-## How to add the support for a new board ?
+## How to add the support for a new board?
 
 The best starting point is the `cubieboard2_buster_armhf_vmdb2-0.14.1.yaml` file which is the simplest.<br>
 FIXME<br>
-Is the card supported by flash kernel ?<br>
+Is the card supported by flash kernel?<br>
 If not, ..., comment the rm of /etc/flash-kernel/machine, if not kernel update wont work<br>
 Same if flash-kernel cannot retrieve the card's name by looking in /proc/device-tree/model<br>
 For example in case something else than U-Boot is used as bootloader<br>
