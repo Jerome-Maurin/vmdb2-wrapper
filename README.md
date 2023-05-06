@@ -97,6 +97,13 @@ In case the image comes from Github Releases or Github Actions you could use som
 
     zcat cubietruck_buster_armhf.img.bz2.zip | bunzip2 -c -d | sudo dd bs=64k status=progress oflag=dsync of=/dev/mmcblk1
 
+# Default login
+
+As vmdb2 produces a standard Debian distribution, there is a default `root`
+account, that is passwordless. If you boot a "factory" image, just enter the
+login `root`; no password will be prompted, and you will have full access to
+the system.
+
 # Customizing the image by using an Ansible-playbook
 
 For Ansible use `vmdb2-ansible.yaml.exemple` as a starting point, create a file named `vmdb2-ansible.yaml` to write an Ansible-playbook that will be used by `vmdb2`.
