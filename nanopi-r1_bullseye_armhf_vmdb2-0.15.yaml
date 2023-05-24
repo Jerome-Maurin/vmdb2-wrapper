@@ -59,6 +59,7 @@ steps:
       apt-get -y upgrade
       mv /etc/kernel/postinst.d/initramfs-tools /etc/kernel/postinst.d/zz-flash-kernel /
       apt-get -y install linux-image-armmp-lpae
+      apt-get -y install python3
       mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
 
   - create-file: /etc/hostname
