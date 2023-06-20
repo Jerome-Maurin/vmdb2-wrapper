@@ -1,4 +1,4 @@
-# Use like this: sudo vmdb2 nanopi-r1_bullseye_armhf_vmdb2.yaml --output nanopi-r1_bullseye_armhf.img --rootfs-tarball bullseye_armhf_rootfs.tgz --verbose --log=log.txt
+# Use like this: sudo vmdb2 nanopi-r1_bullseye_armhf_vmdb2.yaml --output nanopi-r1_bullseye_armhf.img --rootfs-tarball bullseye_armhf_rootfs.tgz --verbose --log=log_nanopi-r1_`/bin/date +"%F-%Hh-%Mmin"`.txt
 steps:
   - mkimg: "{{ output }}"
     size: 3G
@@ -41,7 +41,7 @@ steps:
     shell: |
       echo "deb http://ftp.de.debian.org/debian bullseye main contrib non-free" > /etc/apt/sources.list
       echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
-      echo "deb http://ftp.de.debian.org/debian bullseye-updates main contrib non-free" >> /etc/apt/sources.list
+      echo "##deb http://ftp.de.debian.org/debian bullseye-updates main contrib non-free" >> /etc/apt/sources.list
     unless: rootfs_unpacked
 
   - apt: install
