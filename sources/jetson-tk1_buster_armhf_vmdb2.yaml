@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 jetson-tk1_buster_armhf_vmdb2-0.15.yaml --output jetson-tk1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt
+# Use like this : sudo vmdb2 jetson-tk1_buster_armhf_vmdb2.yaml --output=../images/jetson-tk1_buster_armhf.img --rootfs-tarball=../rootfs/buster_armhf_rootfs.tgz --verbose --log=../log_build/log_tk1_buster_armhf_`/bin/date +"%F-%Hh-%Mmin"`.txt
 steps:
   - mkimg: "{{ output }}"
     size: 3G
