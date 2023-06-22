@@ -1,0 +1,308 @@
+# Use like this: sudo vmdb2 nanopi-r1_bullseye_armhf_vmdb2.yaml --output=../images/nanopi-r1_bullseye_armhf.img --rootfs-tarball=../rootfs/bullseye_armhf_rootfs.tgz --verbose --log=../log_build/log_nanopi-r1_bullseye_armhf_`/bin/date +"%F-%Hh-%Mmin"`.txt
+steps:
+  - mkimg: "{{ output }}"
+    size: 3G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 16M
+    end: 100%
+    tag: root
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
+
+  - mount: root
+
+  - unpack-rootfs: root
+
+  - qemu-debootstrap: bullseye
+    mirror: http://ftp.de.debian.org/debian
+    target: root
+    arch: armhf
+    components:
+    - main
+    - contrib
+    - non-free
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - initramfs-tools
+    tag: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      echo "deb http://ftp.de.debian.org/debian bullseye main contrib non-free" > /etc/apt/sources.list
+      echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
+      echo "##deb http://ftp.de.debian.org/debian bullseye-updates main contrib non-free" >> /etc/apt/sources.list
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - flash-kernel
+    tag: root
+    unless: rootfs_unpacked
+
+  - cache-rootfs: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      apt-get update
+      apt-get -y upgrade
+      mv /etc/kernel/postinst.d/initramfs-tools /etc/kernel/postinst.d/zz-flash-kernel /
+      apt-get -y install linux-image-armmp-lpae
+      apt-get -y install python3
+      mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
+
+  - create-file: /etc/hostname
+    contents: |+
+      NanoPiR1
+
+  - fstab: root
+
+  - root-fs: root
+    shell: |
+      curl -L -o $ROOT/linux-dtb.deb https://imola.armbian.com/apt/pool/main/l/linux-5.10.16-sunxi/linux-dtb-current-sunxi_21.02.2_armhf.deb
+
+  - create-file: /etc/kernel/postinst.d/add-armbian-dtb
+    contents: |+
+      #!/bin/sh -e
+
+      version="$1"
+
+      # passing the kernel version is required
+      if [ -z "${version}" ]; then
+      	echo >&2 "W: add-armbian-dtb: ${DPKG_MAINTSCRIPT_PACKAGE:-kernel package} did not pass a version number"
+      	exit 2
+      fi
+
+      # only works with boards specified in /etc/flash-kerne/db, flash-kernel supported boards' dtb should be in kernel pkg
+      if [ ! -e "/etc/flash-kernel/db" ]; then
+      	echo >&2 "W: add-armbian-dtb: Missing /etc/flash-kernel/db, add-armbian-dtb cannot continue"
+      	exit 1
+      fi
+
+      dtbfile=$(grep DTB-Id /etc/flash-kernel/db | sed "s@.*DTB-Id: @@g")
+
+      # only works with available /boot/armbian-dtb/${dtbfile}
+      if [ ! -e "/boot/armbian-dtb/${dtbfile}" ]; then
+      	echo >&2 "W: add-armbian-dtb: Missing /boot/armbian-dtb/${dtbfile}, add-armbian-dtb cannot continue"
+      	exit 1
+      fi
+
+      if [ -e "/lib/linux-image-${version}/${dtbfile}" ]; then
+        if cmp -s /boot/armbian-dtb/${dtbfile} /lib/linux-image-${version}/${dtbfile}; then
+          echo "I: ${dtbfile} imported from Armbian is already in /lib/linux-image-${version}/"
+        else
+          echo "I: This board is supported in this Debian kernel"
+        fi
+        echo "I: Skipping adding dtb imported from Armbian to new kernel"
+      	exit 0
+      fi
+
+      echo "I: This board is not supported in this Debian kernel"
+      echo "I: Adding ${dtbfile} imported from Armbian to /lib/linux-image-${version}/"
+
+      cp /boot/armbian-dtb/${dtbfile} /lib/linux-image-${version}/
+
+  - create-file: /etc/kernel/postrm.d/add-armbian-dtb
+    contents: |+
+      #!/bin/sh -e
+
+      version="$1"
+
+      # passing the kernel version is required
+      if [ -z "${version}" ]; then
+      	echo >&2 "W: add-armbian-dtb: ${DPKG_MAINTSCRIPT_PACKAGE:-kernel package} did not pass a version number"
+      	exit 2
+      fi
+
+      # only works with boards specified in /etc/flash-kerne/db, flash-kernel supported boards' dtb should be in kernel pkg
+      if [ ! -e "/etc/flash-kernel/db" ]; then
+      	echo >&2 "W: add-armbian-dtb: Missing /etc/flash-kernel/db, add-armbian-dtb cannot continue"
+      	exit 1
+      fi
+
+      dtbfile=$(grep DTB-Id /etc/flash-kernel/db | sed "s@.*DTB-Id: @@g")
+
+      # only works with available /boot/armbian-dtb/${dtbfile}
+      if [ ! -e "/boot/armbian-dtb/${dtbfile}" ]; then
+      	echo >&2 "W: add-armbian-dtb: Missing /boot/armbian-dtb/${dtbfile}, add-armbian-dtb cannot continue"
+      	exit 1
+      fi
+
+      if [ ! -e "/lib/linux-image-${version}/${dtbfile}" ]; then
+      	exit 0
+      fi
+
+      if cmp -s /boot/armbian-dtb/${dtbfile} /lib/linux-image-${version}/${dtbfile}; then
+        echo "I: Removing Armbian's ${dtbfile} from /lib/linux-image-${version}/ added on kernel install"
+        rm /lib/linux-image-${version}/${dtbfile}
+      else
+        echo "I: ${dtbfile} in /lib/linux-image-${version}/ is not Armbian's"
+        echo "I: Skipping removing dtb imported from Armbian from /lib/linux-image-${version}/"
+      fi
+
+  - chroot: root
+    shell: |
+      dpkg -i linux-dtb.deb
+      mkdir -p /boot/armbian-dtb
+      cp /boot/dtb-5.10.16-sunxi/sun8i-h3-nanopi-r1.dtb /boot/armbian-dtb/
+      dpkg -P linux-dtb-current-sunxi
+      rm linux-dtb.deb
+      chmod +x /etc/kernel/postinst.d/add-armbian-dtb
+      chmod +x /etc/kernel/postrm.d/add-armbian-dtb
+      cp /boot/armbian-dtb/sun8i-h3-nanopi-r1.dtb /usr/lib/linux-image-$(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")/
+
+  - create-dir: /lib/firmware/brcm
+
+  - create-file: /lib/firmware/brcm/brcmfmac43430-sdio.txt
+    contents: |+
+      #AP6212_NVRAM_V1.0_20140603
+      # 2.4 GHz, 20 MHz BW mode
+
+      # The following parameter values are just placeholders, need to be updated.
+      manfid=0x2d0
+      prodid=0x0726
+      vendid=0x14e4
+      devid=0x43e2
+      boardtype=0x0726
+      boardrev=0x1101
+      boardnum=22
+      macaddr=00:90:4c:c5:12:38
+      sromrev=11
+      boardflags=0x00404201
+      xtalfreq=26000
+      nocrc=1
+      ag0=255
+      aa2g=1
+      ccode=ALL
+
+      pa0itssit=0x20
+      extpagain2g=0
+
+      #PA parameters for 2.4GHz, measured at CHIP OUTPUT
+      pa2ga0=-168,7161,-820
+      AvVmid_c0=0x0,0xc8
+      cckpwroffset0=5
+
+      # PPR params
+      maxp2ga0=90
+      txpwrbckof=6
+      cckbw202gpo=0x5555
+      legofdmbw202gpo=0x77777777
+      mcsbw202gpo=0xaaaaaaaa
+
+      # OFDM IIR :
+      ofdmdigfilttype=7
+      # PAPD mode:
+      papdmode=2
+
+      il0macaddr=00:90:4c:c5:12:38
+      wl0id=0x431b
+
+      #OOB parameters
+      hostwake=0x40
+      hostrdy=0x41
+      usbrdy=0x03
+      usbrdydelay=100
+      deadman_to=0xffffffff
+      # muxenab: 0x1 for UART enable, 0x10 for Host awake
+      muxenab=0x10
+      # CLDO PWM voltage settings - 0x4 - 1.1 volt
+      #cldo_pwm=0x4
+
+  - create-file: /etc/flash-kernel/db
+    contents: |+
+      Machine: FriendlyElec NanoPi-R1
+      Kernel-Flavors: armmp armmp-lpae
+      Boot-Script-Path: /boot/boot.scr
+      DTB-Id: sun8i-h3-nanopi-r1.dtb
+      U-Boot-Script-Name: bootscr.sunxi
+      Required-Packages: u-boot-tools
+
+  - create-file: /etc/flash-kernel/machine
+    contents: |+
+      FriendlyElec NanoPi-R1
+
+  - chroot: root
+    shell: |
+      apt-get -y install wireless-regdb firmware-brcm80211
+      apt-get -y install crda
+
+      # Add hostname to /etc/hosts for IPv4 & IPv6
+      HOSTNAME=$(cat /etc/hostname)
+      sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
+      sed -i "4i::2\t\t$HOSTNAME" /etc/hosts
+
+      sed -i "s@errors=remount-ro@noatime,nodiratime,errors=remount-ro@g" /etc/fstab
+
+      sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0@g" /etc/default/flash-kernel
+
+      # Back-up fsck
+      mv /usr/share/initramfs-tools/hooks/fsck /usr/share/initramfs-tools/hooks/fsck.bak
+      chmod -x /usr/share/initramfs-tools/hooks/fsck.bak
+
+      # Fix fsck to read root fstype in fstab
+      sed "s@\[.*\"\/\".*|| @@g" /usr/share/initramfs-tools/hooks/fsck.bak > /usr/share/initramfs-tools/hooks/fsck
+      chmod +x /usr/share/initramfs-tools/hooks/fsck
+
+      update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
+
+      sed -i "s@root:\*:@root::@g" /etc/shadow
+
+  - root-fs: root
+    shell: |
+      curl -L -o $ROOT/u-boot.deb https://imola.armbian.com/apt/pool/main/l/linux-u-boot-nanopi-r1-current/linux-u-boot-current-nanopi-r1_21.05.1_armhf.deb
+
+  - chroot: root
+    shell: |
+      dpkg -i u-boot.deb
+      rm u-boot.deb
+
+  - root-fs: root
+    shell: |
+      dd conv=fsync,notrunc if=$ROOT/usr/lib/linux-u-boot-current-nanopi-r1_21.05.1_armhf/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
+
+  - create-file: /etc/network/interfaces.d/lo
+    contents: |+
+      auto lo
+      iface lo inet loopback
+
+  - create-file: /etc/network/interfaces.d/eth0
+    contents: |+
+      auto eth0
+      iface eth0 inet dhcp
+
+  - create-file: /etc/network/interfaces.d/eth1
+    contents: |+
+      auto eth1
+      iface eth1 inet dhcp
+
+  - root-fs: root
+    shell: |
+      test -e vmdb2-ansible.yaml || ln -s vmdb2-ansible.yaml.example vmdb2-ansible.yaml
+      mount -t proc proc $ROOT/proc
+
+  - ansible: root
+    playbook: vmdb2-ansible.yaml
+
+  - root-fs: root
+    shell: |
+      # Restore fsck
+      mv $ROOT/usr/share/initramfs-tools/hooks/fsck.bak $ROOT/usr/share/initramfs-tools/hooks/fsck
+      chmod +x $ROOT/usr/share/initramfs-tools/hooks/fsck
+
+      umount $ROOT/proc
+      rm $ROOT/etc/flash-kernel/machine
+
+  - create-file: /etc/resolv.conf
+    contents: |
