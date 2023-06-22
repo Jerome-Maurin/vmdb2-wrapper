@@ -29,7 +29,10 @@ FYI these images are also [build using `vmdb2`](https://salsa.debian.org/raspi-t
 
 # Supported Platforms
 
-FIXME
+FIXME, but at least
+ - Debian release 10.x (Buster)
+ - Debian release 11.x (Bullseye)
+ - Debian release 12.x (Bookworm), still in progress
 
 # TL;DR Getting started
 
@@ -45,16 +48,18 @@ You can build the image yourself using a Debian (or an Ubuntu, you'll need to ad
 
 On a freshly installed minimalist Debian (with sudo installed), use this command to install needed packages:
 
-    sudo apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support
+    sudo apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support zerofree
 
 The purpose behind each of those packages is explained in the [**Needed packages**](#needed-packages) section.
 
-At the moment, the `vmdb2` version in Debian Buster lacks a critical feature which forces the installation of Bullseye's version.<br>
+Previously (Debian buster), the `vmdb2` version in Debian Buster lacks a critical feature which forces the installation of Bullseye's version.<br>
 Either add the Bullseye repository to your `sources.list` (be careful to [limit the package to vmdb2](https://wiki.debian.org/AptConfiguration#apt_preferences_.28APT_pinning.29)) or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/all/vmdb2/download) manually.<br>
 For example (manual install):
 
     wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.22-1_all.deb
     sudo dpkg -i vmdb2_0.22-1_all.deb
+
+At the moment, (Debian bullseye), vmdb2 is released : 0.27+really.0.26-1
 
 ## Choosing the right target
 
