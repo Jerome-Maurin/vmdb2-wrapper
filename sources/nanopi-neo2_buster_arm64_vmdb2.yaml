@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 nanopi-neo2_buster_arm64_vmdb2.yaml --output=../images/nanopi-neo2_buster_arm64.img --rootfs-tarball=../rootfs/buster_arm64_rootfs.tgz --verbose --log=../log_build/log_nanaopi-neo2_buster_armhf_`/bin/date +"%F-%Hh-%Mmin"`.txt
+# Use like this : sudo vmdb2 nanopi-neo2_buster_arm64_vmdb2.yaml --output=../images/nanopi-neo2_buster_arm64.img --rootfs-tarball=../rootfs/buster_arm64_rootfs.tgz --verbose --log=../log_build/log_nanopi-neo2_buster_arm64_`/bin/date +"%F-%Hh-%Mmin"`.txt
 steps:
   - mkimg: "{{ output }}"
     size: 3G
