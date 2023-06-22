@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 udoo-quad_buster_armhf_vmdb2-0.15.yaml --output udoo-quad_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt
+# Use like this : sudo vmdb2 udoo-quad_buster_armhf_vmdb2.yaml --output=../images/udoo-quad_buster_armhf.img --rootfs-tarball=../rootfs/buster_armhf_rootfs.tgz --verbose --log=../log_build/log_udoo-quad_buster_arm64_`/bin/date +"%F-%Hh-%Mmin"`.txt
 steps:
   - mkimg: "{{ output }}"
     size: 3G
