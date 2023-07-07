@@ -34,6 +34,8 @@ steps:
   - apt: install
     packages:
       - initramfs-tools
+      - sysvinit-core
+      - sysvinit-utils
     tag: root
     unless: rootfs_unpacked
 
@@ -133,7 +135,7 @@ steps:
 
   - chroot: root
     shell: |
-      apt-get -y install wireless-regdb firmware-brcm80211
+      apt-get -y install wireless-regdb
       apt-get -y install crda
 
       # Add hostname to /etc/hosts for IPv4 & IPv6
