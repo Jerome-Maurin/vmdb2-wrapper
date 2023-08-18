@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 udoo-quad_buster_armhf_vmdb2-0.15.yaml --output udoo-quad_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt
+# Use like this : sudo vmdb2 cubietruck-plus_bullseye_armhf_vmdb2.yaml --output=../images/cubietruck-plus_bullseye_armhf.img --rootfs-tarball=../rootfs/bullseye_armhf_rootfs.tgz --verbose --log=../log_build/log_cubietruck-plus_bullseye_armhf_`/bin/date +"%F-%Hh-%Mmin"`.txt
 steps:
   - mkimg: "{{ output }}"
     size: 3G
@@ -21,7 +21,7 @@ steps:
 
   - unpack-rootfs: root
 
-  - qemu-debootstrap: buster
+  - qemu-debootstrap: bullseye
     mirror: http://ftp.de.debian.org/debian
     target: root
     arch: armhf
@@ -39,16 +39,14 @@ steps:
 
   - chroot: root
     shell: |
-      echo "deb http://ftp.de.debian.org/debian buster main contrib non-free" > /etc/apt/sources.list
-      echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list
-      echo "deb http://ftp.de.debian.org/debian buster-updates main contrib non-free" >> /etc/apt/sources.list
-      echo "deb http://ftp.de.debian.org/debian buster-backports main contrib non-free" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian bullseye main contrib non-free" > /etc/apt/sources.list
+      echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian bullseye-updates main contrib non-free" >> /etc/apt/sources.list
     unless: rootfs_unpacked
 
   - apt: install
     packages:
       - flash-kernel
-    tag: root
     unless: rootfs_unpacked
 
   - cache-rootfs: root
@@ -59,51 +57,22 @@ steps:
       apt-get update
       apt-get -y upgrade
       mv /etc/kernel/postinst.d/initramfs-tools /etc/kernel/postinst.d/zz-flash-kernel /
-      apt-get -y install -t buster-backports linux-image-armmp
+      apt-get -y install linux-image-armmp-lpae
+      apt-get -y install python3
       mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
-
-# Adding hook to include imx-sdma firmware to initramfs
-  - create-file: /etc/initramfs-tools/hooks/imx-sdma-firmware
-    perm: 0755
-    contents: |+
-      #!/usr/bin/env sh
-      
-      set -e
-      
-      PREREQ=""
-      
-      prereqs()
-      {
-           echo "$PREREQ"
-      }
-      
-      case $1 in
-      prereqs)
-           prereqs
-           exit 0
-           ;;
-      esac
-      
-      . /usr/share/initramfs-tools/hook-functions
-      # Begin real processing below this line
-      
-      copy_file firmware /lib/firmware/imx/sdma/sdma-imx6q.bin
 
   - create-file: /etc/hostname
     contents: |+
-      UdooQuad
+      CubietruckPlus
 
   - fstab: root
 
   - create-file: /etc/flash-kernel/machine
     contents: |+
-      Udoo i.MX6 Quad Board
+      Cubietech Cubietruck Plus
 
   - chroot: root
     shell: |
-      # imx-sdma (dma engine) need sdma-imx6q.bin from package firmware-misc-nonfree
-      apt-get -y install -t buster-backports firmware-misc-nonfree
-
       # Add hostname to /etc/hosts for IPv4 & IPv6
       HOSTNAME=$(cat /etc/hostname)
       sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
@@ -111,8 +80,7 @@ steps:
 
       sed -i "s@errors=remount-ro@noatime,nodiratime,errors=remount-ro@g" /etc/fstab
 
-      # Unresolved issue with USB, without usbcore.nousb, kernel hangs during initramfs
-      sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0 usbcore.nousb@g" /etc/default/flash-kernel
+      sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0@g" /etc/default/flash-kernel
 
       # Back-up fsck
       mv /usr/share/initramfs-tools/hooks/fsck /usr/share/initramfs-tools/hooks/fsck.bak
@@ -128,13 +96,12 @@ steps:
 
   - apt: install
     packages:
-      - u-boot-imx
+      - u-boot-sunxi
     tag: root 
 
   - root-fs: root
     shell: |
-      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/udoo/SPL of={{ output }} bs=1K seek=1
-      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/udoo/u-boot.img of={{ output }} bs=1K seek=69
+      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/Cubietruck_plus/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+

@@ -1,0 +1,142 @@
+# Use like this : sudo vmdb2 rock64_buster_arm64_vmdb2.yaml --output=../images/rock64_buster_arm64.img --rootfs-tarball=../rootfs/buster_arm64_rootfs.tgz --verbose --log=../log_build/log_rock64_buster_arm64_`/bin/date +"%F-%Hh-%Mmin"`.txt
+steps:
+  - mkimg: "{{ output }}"
+    size: 3G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+# We have to start higher than 12M because of the tzsw.bin.hardkernel which needs to be at 24576*512 Bytes
+    start: 16M
+    end: 100%
+    tag: root
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
+
+  - mount: root
+
+  - unpack-rootfs: root
+
+  - qemu-debootstrap: buster
+    mirror: http://ftp.de.debian.org/debian
+    target: root
+    arch: arm64
+    components:
+    - main
+    - contrib
+    - non-free
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - initramfs-tools
+    tag: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      echo "deb http://ftp.de.debian.org/debian buster main contrib non-free" > /etc/apt/sources.list
+      echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian buster-updates main contrib non-free" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian buster-backports main contrib non-free" >> /etc/apt/sources.list
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - flash-kernel
+    tag: root
+    unless: rootfs_unpacked
+
+  - cache-rootfs: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      apt-get update
+      apt-get -y upgrade
+      mv /etc/kernel/postinst.d/initramfs-tools /etc/kernel/postinst.d/zz-flash-kernel /
+      apt-get -y install -t buster-backports linux-image-arm64
+      mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
+
+  - create-file: /etc/hostname
+    contents: |+
+      Rock64
+
+  - fstab: root
+
+  - create-file: /etc/flash-kernel/machine
+    contents: |+
+      Pine64 Rock64
+
+  - chroot: root
+    shell: |
+      # Add hostname to /etc/hosts for IPv4 & IPv6
+      HOSTNAME=$(cat /etc/hostname)
+      sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
+      sed -i "4i::2\t\t$HOSTNAME" /etc/hosts
+
+      sed -i "s@errors=remount-ro@noatime,nodiratime,errors=remount-ro@g" /etc/fstab
+
+      sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0@g" /etc/default/flash-kernel
+
+      # Back-up fsck
+      mv /usr/share/initramfs-tools/hooks/fsck /usr/share/initramfs-tools/hooks/fsck.bak
+      chmod -x /usr/share/initramfs-tools/hooks/fsck.bak
+
+      # Fix fsck to read root fstype in fstab
+      sed "s@\[.*\"\/\".*|| @@g" /usr/share/initramfs-tools/hooks/fsck.bak > /usr/share/initramfs-tools/hooks/fsck
+      chmod +x /usr/share/initramfs-tools/hooks/fsck
+
+      update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
+
+      sed -i "s@root:\*:@root::@g" /etc/shadow
+
+  - root-fs: root
+    shell: |
+      curl -L -o $ROOT/u-boot.deb https://imola.armbian.com/apt/pool/main/l/linux-u-boot-rock64-current/linux-u-boot-current-rock64_21.05.1_arm64.deb
+
+  - chroot: root
+    shell: |
+      dpkg -i u-boot.deb
+      rm u-boot.deb
+
+  - root-fs: root
+    shell: |
+      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_21.05.1_arm64/idbloader.img of={{ output }} seek=64 conv=fsync,notrunc
+      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_21.05.1_arm64/u-boot.itb of={{ output }} seek=16384 conv=fsync,notrunc
+
+  - create-file: /etc/network/interfaces.d/lo
+    contents: |+
+      auto lo
+      iface lo inet loopback
+
+  - create-file: /etc/network/interfaces.d/eth0
+    contents: |+
+      auto eth0
+      iface eth0 inet dhcp
+
+  - root-fs: root
+    shell: |
+      test -e vmdb2-ansible.yaml || ln -s vmdb2-ansible.yaml.example vmdb2-ansible.yaml
+      mount -t proc proc $ROOT/proc
+
+  - ansible: root
+    playbook: vmdb2-ansible.yaml
+
+  - root-fs: root
+    shell: |
+      # Restore fsck
+      mv $ROOT/usr/share/initramfs-tools/hooks/fsck.bak $ROOT/usr/share/initramfs-tools/hooks/fsck
+      chmod +x $ROOT/usr/share/initramfs-tools/hooks/fsck
+
+      umount $ROOT/proc
+      rm $ROOT/etc/flash-kernel/machine
+      diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml || true
+
+  - create-file: /etc/resolv.conf
+    contents: |

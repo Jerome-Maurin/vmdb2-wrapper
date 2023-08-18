@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 rock64_buster_arm64_vmdb2-0.15.yaml --output rock64_buster_arm64.img --rootfs-tarball buster_arm64_rootfs.tgz --verbose --log=log.txt
+# Use like this : sudo vmdb2 cubietruck-plus_buster_armhf_vmdb2.yaml --outputt=../images/cubietruck-plus_buster_armhf.img --rootfs-tarball=../rootfs/buster_armhf_rootfs.tgz --verbose --log=../log_build/log_cubietruck-plus_buster_armhf_`/bin/date +"%F-%Hh-%Mmin"`.txt
 steps:
   - mkimg: "{{ output }}"
     size: 3G
@@ -8,7 +8,6 @@ steps:
 
   - mkpart: primary
     device: "{{ output }}"
-# We have to start higher than 12M because of the tzsw.bin.hardkernel which needs to be at 24576*512 Bytes
     start: 16M
     end: 100%
     tag: root
@@ -25,7 +24,7 @@ steps:
   - qemu-debootstrap: buster
     mirror: http://ftp.de.debian.org/debian
     target: root
-    arch: arm64
+    arch: armhf
     components:
     - main
     - contrib
@@ -60,18 +59,18 @@ steps:
       apt-get update
       apt-get -y upgrade
       mv /etc/kernel/postinst.d/initramfs-tools /etc/kernel/postinst.d/zz-flash-kernel /
-      apt-get -y install -t buster-backports linux-image-arm64
+      apt-get -y install -t buster-backports linux-image-armmp-lpae
       mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
 
   - create-file: /etc/hostname
     contents: |+
-      Rock64
+      CubietruckPlus
 
   - fstab: root
 
   - create-file: /etc/flash-kernel/machine
     contents: |+
-      Pine64 Rock64
+      Cubietech Cubietruck Plus
 
   - chroot: root
     shell: |
@@ -96,19 +95,14 @@ steps:
 
       sed -i "s@root:\*:@root::@g" /etc/shadow
 
-  - root-fs: root
-    shell: |
-      curl -L -o $ROOT/u-boot.deb https://imola.armbian.com/apt/pool/main/l/linux-u-boot-rock64-current/linux-u-boot-current-rock64_21.05.1_arm64.deb
-
-  - chroot: root
-    shell: |
-      dpkg -i u-boot.deb
-      rm u-boot.deb
+  - apt: install
+    packages:
+      - u-boot-sunxi
+    tag: root 
 
   - root-fs: root
     shell: |
-      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_21.05.1_arm64/idbloader.img of={{ output }} seek=64 conv=fsync,notrunc
-      dd if=$ROOT/usr/lib/linux-u-boot-current-rock64_21.05.1_arm64/u-boot.itb of={{ output }} seek=16384 conv=fsync,notrunc
+      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/Cubietruck_plus/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+

@@ -1,4 +1,4 @@
-# Use like this : sudo vmdb2 jetson-tk1_buster_armhf_vmdb2-0.15.yaml --output jetson-tk1_buster_armhf.img --rootfs-tarball buster_armhf_rootfs.tgz --verbose --log=log.txt
+# Use like this : sudo vmdb2 cubieboard2_buster_armhf_vmdb2.yaml --output=../images/cubieboard2_buster_armhf.img --rootfs-tarball=../rootfs/buster_armhf_rootfs.tgz --verbose --log=../log_build/log_cubieboard2_buster_armhf_`/bin/date +"%F-%Hh-%Mmin"`.txt
 steps:
   - mkimg: "{{ output }}"
     size: 3G
@@ -64,18 +64,16 @@ steps:
 
   - create-file: /etc/hostname
     contents: |+
-      JetsonTK1
+      Cubieboard2
 
   - fstab: root
 
   - create-file: /etc/flash-kernel/machine
     contents: |+
-      NVIDIA Tegra124 Jetson TK1
+      Cubietech Cubieboard2
 
   - chroot: root
     shell: |
-      apt-get -y install -t buster-backports firmware-misc-nonfree
-
       # Add hostname to /etc/hosts for IPv4 & IPv6
       HOSTNAME=$(cat /etc/hostname)
       sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
@@ -99,13 +97,12 @@ steps:
 
   - apt: install
     packages:
-      - u-boot-tegra
+      - u-boot-sunxi
     tag: root 
 
-# U-Boot not needed on SD-Card for Jetsons, eMMC's is used in boot process
-#  - root-fs: root
-#    shell: |
-#      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/jetson-tk1/u-boot-tegra.bin of={{ output }} bs=1024 seek=8
+  - root-fs: root
+    shell: |
+      dd conv=fsync,notrunc if=$ROOT/usr/lib/u-boot/Cubieboard2/u-boot-sunxi-with-spl.bin of={{ output }} bs=1024 seek=8
 
   - create-file: /etc/network/interfaces.d/lo
     contents: |+
