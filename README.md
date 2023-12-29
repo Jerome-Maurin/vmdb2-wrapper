@@ -41,20 +41,34 @@ You can build the image yourself using a Debian (or an Ubuntu, you'll need to ad
 
 # How to build an image
 
-## Setting up the environment
+## Setting up the environment (Bookworm)
 
-On a freshly installed minimalist Debian (with sudo installed), use this command to install needed packages:
+On a freshly installed minimalist Debian Bookworm (with sudo installed), use this command to install needed packages:
 
-    sudo apt install vmdb2 curl ansible python3-distutils qemu-user-static binfmt-support
+    sudo apt install vmdb2 zerofree curl ansible python3-distutils qemu-user-static binfmt-support
 
 The purpose behind each of those packages is explained in the [**Needed packages**](#needed-packages) section.
 
-At the moment, the `vmdb2` version in Debian Buster lacks a critical feature which forces the installation of Bullseye's version.<br>
+### Building on Buster
+
+vmdb2 version 0.13.2.
+
+Installing zerofree is not needed in this version.
+
+The `vmdb2` version in Debian Buster lacks a critical feature which forces the installation of Bullseye's version.<br>
 Either add the Bullseye repository to your `sources.list` (be careful to [limit the package to vmdb2](https://wiki.debian.org/AptConfiguration#apt_preferences_.28APT_pinning.29)) or retrieve and install [the Bullseye package](https://packages.debian.org/bullseye/all/vmdb2/download) manually.<br>
 For example (manual install):
 
     wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.22-1_all.deb
-    sudo dpkg -i vmdb2_0.22-1_all.deb
+    sudo apt install ./vmdb2_0.22-1_all.deb
+
+### Building on Bullseye
+
+vmdb2 version 0.22.
+
+Installing zerofree is not needed in this version.
+
+FIXME
 
 ## Choosing the right target
 
@@ -111,6 +125,14 @@ For Ansible use `vmdb2-ansible.yaml.exemple` as a starting point, create a file 
 # Needed packages
 
 Why do I need those packages on my system to run a image build?
+
+`zerofree` is needed by vmdb2 since version 0.25 [(see here)](http://git.liw.fi/vmdb2/commit/?id=470b0a05ad7717139897f08e24f48d6fedc2a8d6a).
+
+Unfortunately, the [dependency list in the Bookworm package](https://packages.debian.org/bookworm/vmdb2) is missing zerofree, which means we need to install it manualy.
+
+This is fixed in [Trixie](https://packages.debian.org/trixie/vmdb2).
+
+******************************
 
 `curl` is needed to fetch some binaries from the internet.
 
