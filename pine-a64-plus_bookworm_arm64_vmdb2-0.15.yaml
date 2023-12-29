@@ -102,6 +102,10 @@ steps:
 
   - root-fs: root
     shell: |
+      if ! which mkimage
+      then
+        PATH=$PATH:$ROOT/usr/bin
+      fi
       TARGET="$ROOT/usr/lib/u-boot/pine64_plus" $ROOT/usr/bin/u-boot-install-sunxi {{ output }}
 
   - create-file: /etc/network/interfaces.d/lo
