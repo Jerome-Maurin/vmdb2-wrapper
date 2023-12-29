@@ -103,6 +103,10 @@ steps:
 
   - root-fs: root
     shell: |
+      if ! which mkimage
+      then
+        PATH=$PATH:$ROOT/usr/bin
+      fi
       TARGET="$ROOT/usr/lib/u-boot/rock64-rk3328" $ROOT/usr/bin/u-boot-install-rockchip {{ output }}
 
   - create-file: /etc/network/interfaces.d/lo
