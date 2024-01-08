@@ -1,4 +1,3 @@
-
 # Use like this : sudo vmdb2 cubietruck_bookworm_armhf_vmdb2-0.15.yaml --output cubietruck_bookworm_armhf.img --rootfs-tarball bookworm_armhf_rootfs.tgz --verbose --log=log.txt
 steps:
   - mkimg: "{{ output }}"
