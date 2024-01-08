@@ -6,9 +6,22 @@
       ansible.builtin.raw:
         echo test
 
-# Example of a task installing python3 in the image, which is needed to run normal playbooks
-# We use gather_facts: no, because facts gathering need python, which is not yet available
+# To begin, here is an example of a task installing python3 in the image, which is needed to run normal playbooks;
+# we use "gather_facts: no" because facts gathering need python, which is not yet available:
 #    - name: Bootstrap a host without python3 installed
 #      gather_facts: no
 #      ansible.builtin.raw:
 #        apt install -y python3
+# It is now possible to simply call any Ansible module, the shell module for example:
+#    - name: test
+#      ansible.builtin.shell: |
+#        echo test
+# Or the apt module :
+#    - name: Install OpenSSH-Server
+#      ansible.builtin.apt:
+#        pkg: 'openssh-server'
+#        state: present
+# The Ansible documentation for this can be found here (raw module):
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/raw_module.html#synopsis
+# and the specific need for "gather_facts: no" here:
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/raw_module.html#notes
