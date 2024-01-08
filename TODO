@@ -1,4 +1,10 @@
-- Add /etc/fw_env.config to all targets
+- Add comments in yaml files : Update yaml files to include @jean-marc-LACROIX's documentation
+- Add documentation to tack about qemu-debootstrap -> debootstrap in Trixie
+- Upgrade Github Action to use Bookworms vmdb2, zerofree manual call might not be needed anymore
+- Build in containers to simulate different Debian versions
+- Clean-up rest of TODO XD
+
+- Add /etc/fw_env.config to all targets using u-boot
 - Test Cubie2, test ethernet
 - Minimize raw image size (1GB ? df +e with e < 50MB ?)
 - Expand root filesystem to fill memory size ? (rc.local) OR Display message in console (fdisk/cfdisk/sfdisk + resize2fs) ?
@@ -17,7 +23,6 @@
 - Add Xen support when possible ?
 - Would be possible not to use root= in /etc/default/flash-kernel, contents of /etc/fstab in initramfs should suffice, but root= seems good practice
 - Add ssh and local user (add README explanations)
-- Add comments in yaml files
 - Replace use of curl by proper apt install for armbian u-boots ?
 - Add https support ? not yet, invalid cert domain for DE mirror
 - Complete the HOW-TO add a new board in README
