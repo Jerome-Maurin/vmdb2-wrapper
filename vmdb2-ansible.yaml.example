@@ -1,8 +1,14 @@
 # Create a vmdb2-ansible.yaml file for it to be used by vmdb2
 - hosts: image
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
+  gather_facts: no
   tasks:
     - name: test
-      shell: |
+      ansible.builtin.raw:
         echo test
+
+# Example of a task installing python3 in the image, which is needed to run normal playbooks
+# We use gather_facts: no, because facts gathering need python, which is not yet available
+#    - name: Bootstrap a host without python3 installed
+#      gather_facts: no
+#      ansible.builtin.raw:
+#        apt install -y python3

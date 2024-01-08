@@ -1,3 +1,4 @@
+
 # Use like this: sudo vmdb2 nanopi-r1_bullseye_armhf_vmdb2-0.15.yaml --output nanopi-r1_bullseye_armhf.img --rootfs-tarball bullseye_armhf_rootfs.tgz --verbose --log=log.txt
 steps:
   - mkimg: "{{ output }}"
@@ -291,8 +292,29 @@ steps:
       test -e vmdb2-ansible.yaml || ln -s vmdb2-ansible.yaml.example vmdb2-ansible.yaml
       mount -t proc proc $ROOT/proc
 
-  - ansible: root
-    playbook: vmdb2-ansible.yaml
+# The "ansible" directive is non-functional in Debian 12 Bookworm.
+#
+# Since Ansible in Debian Bookworm is version 2.14, UTF8 is mandatory :
+# https://docs.ansible.com/ansible/devel/porting_guides/porting_guide_7.html#command-line
+#
+# This is taken into account in vmdb2 0.27, see 5th bullet point in 0.27 section, here :
+# http://git.liw.fi/vmdb2/tree/NEWS
+#
+# Unfortunately, Bookworm uses vmdb2 0.26, which has UTF8 missing when calling vmdb2.
+# To fix that in Bookworm, we call the ansible-playbook command directly.
+
+# This directive is commented for now (Bookworm)
+#  - ansible: root
+#    playbook: vmdb2-ansible.yaml
+# Will be uncommented when Debian 13 Trixie becomes stable
+
+# This directive bloc should be removed when Debian 13 Trixie becomes stable
+  - root-fs: root
+    shell: |
+      echo "[image]" > /tmp/tmpinvvmdb2ansible
+      echo "$ROOT" >> /tmp/tmpinvvmdb2ansible
+      LC_ALL=C.UTF8 ansible-playbook -c chroot -i /tmp/tmpinvvmdb2ansible --tags all vmdb2-ansible.yaml
+      rm /tmp/tmpinvvmdb2ansible
 
   - root-fs: root
     shell: |
