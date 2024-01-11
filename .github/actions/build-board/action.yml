@@ -1,0 +1,32 @@
+name: 'Build Board'
+description: 'Build the image for a given board using the file name'
+author: "Jérôme Maurin <j@jmaurin.ovh>"
+
+inputs:
+  board_name:
+    description: 'Name of the board we want to build for'
+    required: true
+  deb_version:
+    description: 'Name of the Debian version we want to build'
+    required: true
+  architecture:
+    description: 'Name of the architecture we want to build with'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: ${{ inputs.board_name }} : Building with vmdb2
+      run: sudo vmdb2 ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}_vmdb2-0.15.yaml --output ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img --rootfs-tarball ${{ inputs.deb_version }}_${{ inputs.architecture }}_rootfs.tgz --verbose --log=log.txt; cat log.txt
+
+    - name: ${{ inputs.board_name }} : Zero-ing obsolete data blocks
+      run: loopN=$(sudo kpartx -asv ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img
+
+    - name: ${{ inputs.board_name }} : Compressing image
+      run: sudo lbzip2 ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img
+
+    - name: ${{ inputs.board_name }} : Uploading image
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img.bz2
+        path: ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img.bz2
