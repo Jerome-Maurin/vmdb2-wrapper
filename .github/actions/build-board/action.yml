@@ -16,16 +16,16 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: ${{ inputs.board_name }} : Building with vmdb2
+    - name: Building with vmdb2
       run: sudo vmdb2 ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}_vmdb2-0.15.yaml --output ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img --rootfs-tarball ${{ inputs.deb_version }}_${{ inputs.architecture }}_rootfs.tgz --verbose --log=log.txt; cat log.txt
 
-    - name: ${{ inputs.board_name }} : Zero-ing obsolete data blocks
+    - name: Zero-ing obsolete data blocks
       run: loopN=$(sudo kpartx -asv ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img | cut -d\  -f 3); sudo zerofree /dev/mapper/$loopN; sync; sudo kpartx -dsv ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img
 
-    - name: ${{ inputs.board_name }} : Compressing image
+    - name: Compressing image
       run: sudo lbzip2 ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img
 
-    - name: ${{ inputs.board_name }} : Uploading image
+    - name: Uploading image
       uses: actions/upload-artifact@v1
       with:
         name: ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img.bz2
