@@ -19,7 +19,7 @@ jobs:
 
     strategy:
       matrix:
-        armhf_boards: [cubietruck, cubietruck-plus, orangepi-r1, nanopi-r1, odroid-hc1, udoo-quad, jetson-tk1]
+        armhf_boards: [cubieboard2, cubietruck, cubietruck-plus, orangepi-r1, nanopi-r1, odroid-hc1, udoo-quad, jetson-tk1]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -37,14 +37,7 @@ jobs:
         wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.22-1_all.deb
         sudo dpkg -i vmdb2_0.22-1_all.deb
 
-    - name: Build buster armhf first board
-      uses: ./.github/actions/build-board
-      with:
-        board_name: 'cubieboard2'
-        deb_version: 'buster'
-        architecture: 'armhf'
-
-    - name: Build buster armhf other boards
+    - name: Build buster armhf board
       uses: ./.github/actions/build-board
       with:
         board_name: '${{ matrix.armhf_boards }}'
@@ -57,7 +50,7 @@ jobs:
 
     strategy:
       matrix:
-        arm64_boards: [pine-a64-plus, pinebook, nanopi-neo2, odroid-n2, jetson-tx1]
+        arm64_boards: [rock64, pine-a64-plus, pinebook, nanopi-neo2, odroid-n2, jetson-tx1]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -75,14 +68,7 @@ jobs:
         wget http://ftp.de.debian.org/debian/pool/main/v/vmdb2/vmdb2_0.22-1_all.deb
         sudo dpkg -i vmdb2_0.22-1_all.deb
 
-    - name: Build buster arm64 first board
-      uses: ./.github/actions/build-board
-      with:
-        board_name: 'rock64'
-        deb_version: 'buster'
-        architecture: 'arm64'
-
-    - name: Build buster arm64 other boards
+    - name: Build buster arm64 board
       uses: ./.github/actions/build-board
       with:
         board_name: '${{ matrix.arm64_boards }}'
