@@ -1,7 +1,7 @@
 # VMDB2-Wrapper
 
 
-[![actions build ](https://github.com/Jerome-Maurin/vmdb2-wrapper/workflows/Build%20images/badge.svg)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions)
+[![actions build ](https://github.com/Jerome-Maurin/vmdb2-wrapper/workflows/Build%20images%20matrix/badge.svg)](https://github.com/Jerome-Maurin/vmdb2-wrapper/actions)
 
 VMDB2-Wrapper is a simple wrapper for [`vmdb2`](https://vmdb2.liw.fi/), to build armhf & arm64 board images for SD-card using `u-boot` Debian packages, `flash-kernel` and Debian kernels.
 
