@@ -20,7 +20,6 @@ jobs:
     strategy:
       matrix:
         armhf_boards: [cubietruck, cubietruck-plus, orangepi-r1, nanopi-r1, odroid-hc1, udoo-quad, jetson-tk1]
-        arm64_boards: [pine-a64-plus, pinebook, nanopi-neo2, odroid-n2, jetson-tx1]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -55,6 +54,10 @@ jobs:
   buster_arm64:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        arm64_boards: [pine-a64-plus, pinebook, nanopi-neo2, odroid-n2, jetson-tx1]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
