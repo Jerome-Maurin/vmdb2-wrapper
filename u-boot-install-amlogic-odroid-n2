@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+DEV=/dev/mmcblk1
+TMPDIR=/tmp/amlogic-boot-fip
+SRC_UBOOT_PATH=/usr/lib/u-boot/odroid-n2/u-boot.bin
+EXECUTABLE_DIR=~/tempo_path
+mkdir $EXECUTABLE_DIR
+echo '#!/usr/bin/env bash
+shift 2
+$@' > $EXECUTABLE_DIR/qemu-x86_64
+chmod +x $EXECUTABLE_DIR/qemu-x86_64
+export PATH=$PATH:$EXECUTABLE_DIR
+git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1 $TMPDIR
+cd $TMPDIR
+mkdir odroid-n2-output-dir
+./build-fip.sh odroid-n2 $SRC_UBOOT_PATH odroid-n2-output-dir
+sudo dd if=odroid-n2-output-dir/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
+sudo dd if=odroid-n2-output-dir/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
+rm -fr $TMPDIR
+rm -fr $EXECUTABLE_DIR
