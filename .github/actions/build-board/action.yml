@@ -29,7 +29,7 @@ runs:
       shell: bash
 
     - name: Uploading image
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img.bz2
         path: ${{ inputs.board_name }}_${{ inputs.deb_version }}_${{ inputs.architecture }}.img.bz2
