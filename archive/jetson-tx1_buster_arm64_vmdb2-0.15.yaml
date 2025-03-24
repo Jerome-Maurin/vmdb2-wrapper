@@ -100,7 +100,7 @@ steps:
   - apt: install
     packages:
       - u-boot-tegra
-    tag: root 
+    tag: root
 
 # U-Boot not needed on SD-Card for Jetsons, eMMC's is used in boot process
 #  - root-fs: root

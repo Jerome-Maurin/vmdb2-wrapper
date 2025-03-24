@@ -129,7 +129,7 @@ steps:
   - apt: install
     packages:
       - u-boot-imx
-    tag: root 
+    tag: root
 
   - root-fs: root
     shell: |
