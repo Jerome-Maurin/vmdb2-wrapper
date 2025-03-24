@@ -1,0 +1,162 @@
+# Use like this : sudo vmdb2 cubieboard2_bookworm_armhf_vmdb2-0.15.yaml --output cubieboard2_bookworm_armhf.img --rootfs-tarball bookworm_armhf_rootfs.tgz --verbose --log=log.txt
+steps:
+  - mkimg: "{{ output }}"
+    size: 3G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 16M
+    end: 100%
+    tag: root
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
+
+  - mount: root
+
+  - unpack-rootfs: root
+
+  - qemu-debootstrap: bookworm
+    mirror: http://ftp.de.debian.org/debian
+    target: root
+    arch: armhf
+    components:
+    - main
+    - contrib
+    - non-free
+    - non-free-firmware
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - initramfs-tools
+    tag: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      echo "deb http://ftp.de.debian.org/debian bookworm main contrib non-free non-free-firmware" > /etc/apt/sources.list
+      echo "deb http://security.debian.org/ bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list
+      echo "deb http://ftp.de.debian.org/debian bookworm-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - flash-kernel
+    tag: root
+    unless: rootfs_unpacked
+
+  - cache-rootfs: root
+    unless: rootfs_unpacked
+
+  - chroot: root
+    shell: |
+      apt-get update
+      apt-get -y upgrade
+      mv /etc/kernel/postinst.d/initramfs-tools /etc/kernel/postinst.d/zz-flash-kernel /
+      apt-get -y install linux-image-armmp-lpae
+      mv /initramfs-tools /zz-flash-kernel /etc/kernel/postinst.d/
+
+  - create-file: /etc/hostname
+    contents: |+
+      Cubieboard2
+
+  - fstab: root
+
+  - create-file: /etc/flash-kernel/machine
+    contents: |+
+      Cubietech Cubieboard2
+
+  - chroot: root
+    shell: |
+      # Add hostname to /etc/hosts for IPv4 & IPv6
+      HOSTNAME=$(cat /etc/hostname)
+      sed -i "2i127.0.0.2\t$HOSTNAME" /etc/hosts
+      sed -i "4i::2\t\t$HOSTNAME" /etc/hosts
+
+      sed -i "s@errors=remount-ro@noatime,nodiratime,errors=remount-ro@g" /etc/fstab
+
+      sed -i "s@quiet@root=$(grep ^UUID /etc/fstab | cut -d \  -f 1) net.ifnames=0@g" /etc/default/flash-kernel
+
+      # Back-up fsck
+      mv /usr/share/initramfs-tools/hooks/fsck /usr/share/initramfs-tools/hooks/fsck.bak
+      chmod -x /usr/share/initramfs-tools/hooks/fsck.bak
+
+      # Fix fsck to read root fstype in fstab
+      sed "s@\[.*\"\/\".*|| @@g" /usr/share/initramfs-tools/hooks/fsck.bak > /usr/share/initramfs-tools/hooks/fsck
+      chmod +x /usr/share/initramfs-tools/hooks/fsck
+
+      update-initramfs -c -k $(ls -l /vmlinuz | sed "s%^.*vmlinuz-\(.*\)$%\1%g")
+
+      sed -i "s@root:\*:@root::@g" /etc/shadow
+
+  - apt: install
+    packages:
+      - u-boot-sunxi
+    tag: root
+
+  - root-fs: root
+    shell: |
+      if ! which mkimage
+      then
+        PATH=$PATH:$ROOT/usr/bin
+      fi
+      TARGET="$ROOT/usr/lib/u-boot/Cubieboard2" $ROOT/usr/bin/u-boot-install-sunxi {{ output }}
+
+  - create-file: /etc/network/interfaces.d/lo
+    contents: |+
+      auto lo
+      iface lo inet loopback
+
+  - create-file: /etc/network/interfaces.d/eth0
+    contents: |+
+      auto eth0
+      iface eth0 inet dhcp
+
+  - root-fs: root
+    shell: |
+      test -e vmdb2-ansible.yaml || ln -s vmdb2-ansible.yaml.example vmdb2-ansible.yaml
+      mount -t proc proc $ROOT/proc
+
+# The "ansible" directive is non-functional in Debian 12 Bookworm.
+#
+# Since Ansible in Debian Bookworm is version 2.14, UTF8 is mandatory :
+# https://docs.ansible.com/ansible/devel/porting_guides/porting_guide_7.html#command-line
+#
+# This is taken into account in vmdb2 0.27, see 5th bullet point in 0.27 section, here :
+# http://git.liw.fi/vmdb2/tree/NEWS
+#
+# Unfortunately, Bookworm uses vmdb2 0.26, which has UTF8 missing when calling vmdb2.
+# To fix that in Bookworm, we call the ansible-playbook command directly.
+
+# This directive is commented for now (Bookworm)
+#  - ansible: root
+#    playbook: vmdb2-ansible.yaml
+# Will be uncommented when Debian 13 Trixie becomes stable
+
+# This directive bloc should be removed when Debian 13 Trixie becomes stable
+  - root-fs: root
+    shell: |
+      echo "[image]" > /tmp/tmpinvvmdb2ansible
+      echo "$ROOT" >> /tmp/tmpinvvmdb2ansible
+      LC_ALL=C.UTF8 ansible-playbook -c chroot -i /tmp/tmpinvvmdb2ansible --tags all vmdb2-ansible.yaml
+      rm /tmp/tmpinvvmdb2ansible
+
+  - root-fs: root
+    shell: |
+      # Restore fsck
+      mv $ROOT/usr/share/initramfs-tools/hooks/fsck.bak $ROOT/usr/share/initramfs-tools/hooks/fsck
+      chmod +x $ROOT/usr/share/initramfs-tools/hooks/fsck
+
+      umount $ROOT/proc
+      rm $ROOT/etc/flash-kernel/machine
+      diff vmdb2-ansible.yaml.example vmdb2-ansible.yaml && test -L vmdb2-ansible.yaml && rm vmdb2-ansible.yaml || true
+
+  - create-file: /etc/resolv.conf
+    contents: |
